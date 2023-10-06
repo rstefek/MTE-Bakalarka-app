@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "info.stefkovi.studium.mte_bakalarka_app"
+    namespace = "info.stefkovi.studium.mte_bakalarka"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "info.stefkovi.studium.mte_bakalarka_app"
+        applicationId = "info.stefkovi.studium.mte_bakalarka"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
