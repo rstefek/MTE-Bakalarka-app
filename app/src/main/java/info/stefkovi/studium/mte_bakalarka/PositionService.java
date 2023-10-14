@@ -20,18 +20,20 @@ public class PositionService implements LocationListener {
     @SuppressLint("MissingPermission")
     public PositionService(LocationManager manager) {
         this._manager = manager;
-        _manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 5000, 5, this);
+        _manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10000, 0, this);
     }
 
     public PositionApiModel GetCurrentPosition() {
         PositionApiModel apiModel = new PositionApiModel();
-        apiModel.lat = _currentLocation.getLatitude();
-        apiModel.lon = _currentLocation.getLongitude();
-        apiModel.speed = _currentLocation.getSpeed();
-        apiModel.accuracy = _currentLocation.getAccuracy();
-        apiModel.altitude = _currentLocation.getAltitude();
-        apiModel.bearing = _currentLocation.getBearing();
-        apiModel.provider = _currentLocation.getProvider();
+        if (_currentLocation != null) {
+            apiModel.lat = _currentLocation.getLatitude();
+            apiModel.lon = _currentLocation.getLongitude();
+            apiModel.speed = _currentLocation.getSpeed();
+            apiModel.accuracy = _currentLocation.getAccuracy();
+            apiModel.altitude = _currentLocation.getAltitude();
+            apiModel.bearing = _currentLocation.getBearing();
+            apiModel.provider = _currentLocation.getProvider();
+        }
         return apiModel;
     }
 
