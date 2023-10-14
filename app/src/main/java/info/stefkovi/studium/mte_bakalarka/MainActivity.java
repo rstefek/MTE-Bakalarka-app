@@ -2,6 +2,7 @@ package info.stefkovi.studium.mte_bakalarka;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -15,6 +16,11 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
@@ -41,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
         _telephonyService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+
+        mapView.onCreate(null);
+        mapView.getMapAsync(googleMap -> {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(49.8336850, 18.1636014)));
+            googleMap.moveCamera(CameraUpdateFactory.zoomTo(11));
+        });
+
         Button btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             enableActivityActions();
         }
 
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+
         Button btn2 = (Button) findViewById(R.id.button2);
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,5 +92,54 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onResume();
     }
 }
