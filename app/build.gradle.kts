@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "info.stefkovi.studium.mte_bakalarka"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"

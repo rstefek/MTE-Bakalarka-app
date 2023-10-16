@@ -1,15 +1,7 @@
 package info.stefkovi.studium.mte_bakalarka;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -17,12 +9,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
+import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
+import info.stefkovi.studium.mte_bakalarka.model.CellIdentityApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PositionApiModel pos = _positionService.GetCurrentPosition();
+                List<CellInfoApiModel> cells = _telephonyService.getAllCellInfo();
+
                 Toast.makeText(getApplicationContext(), pos.provider, Toast.LENGTH_LONG).show();
             }
         });
