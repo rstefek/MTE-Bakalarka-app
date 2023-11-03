@@ -1,4 +1,4 @@
-package info.stefkovi.studium.mte_bakalarka;
+package info.stefkovi.studium.mte_bakalarka.services;
 
 import android.annotation.SuppressLint;
 import android.telephony.CellIdentityCdma;

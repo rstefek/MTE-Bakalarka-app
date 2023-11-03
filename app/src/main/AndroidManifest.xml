@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,15 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MTEBakalarkaapp"
         tools:targetApi="31">
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCBZj8roNr4ipdfk_Fm-3aHcD4ox8ARtBA"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCBZj8roNr4ipdfk_Fm-3aHcD4ox8ARtBA" />
 
         <activity
             android:name=".SecondScreen"
             android:exported="false" />
 
         <service
-            android:name=".BackgroundWorker"
+            android:name=".services.BackgroundWorker"
             android:enabled="true"
             android:exported="true" />
 

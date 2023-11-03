@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,12 +23,16 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
-import info.stefkovi.studium.mte_bakalarka.model.CellIdentityApiModel;
+import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
+import info.stefkovi.studium.mte_bakalarka.services.PositionService;
+import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         _telephonyService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
+        SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
+
         MapView mapView = (MapView) findViewById(R.id.mapView);
 
         mapView.onCreate(null);
@@ -56,6 +65,31 @@ public class MainActivity extends AppCompatActivity {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(49.8336850, 18.1636014)));
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(11));
+        });
+
+        Button loginBtn = (Button) findViewById(R.id.loginButton);
+        EditText loginName = (EditText) findViewById(R.id.loginName);
+        EditText loginPassword = (EditText) findViewById(R.id.loginPassword);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    //Background work here
+                    LoginResultApiModel res = ApiCommuncation.Login(loginName.getText().toString(), loginPassword.getText().toString());
+                    if(res != null) {
+                        //RecyclerView
+
+                        //uložení tokenu
+                        preferences.savePrefString("jwt", res.jwt);
+
+                        handler.post(() -> {
+                            Toast.makeText(getApplicationContext(), res.toString(), Toast.LENGTH_LONG).show();
+                        });
+                    }
+                });
+            }
         });
 
         Button btn = (Button) findViewById(R.id.button1);

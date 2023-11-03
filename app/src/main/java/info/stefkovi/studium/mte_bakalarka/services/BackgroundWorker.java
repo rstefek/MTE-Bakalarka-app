@@ -1,4 +1,4 @@
-package info.stefkovi.studium.mte_bakalarka;
+package info.stefkovi.studium.mte_bakalarka.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
+
+import info.stefkovi.studium.mte_bakalarka.services.PositionService;
+import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
 
 public class BackgroundWorker extends Service {
     private TelephonyService _teleService;

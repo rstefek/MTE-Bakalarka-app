@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MTE-Bakalarka-app</string>
     <string name="chyba1">Hele pele</string>
-    <string name="Button1Text">Tlač 1</string>
-    <string name="Button2Text">Tlač 2</string>
+    <string name="Button1Text">Proveď zjištění buňek</string>
+    <string name="Button2Text">Test obrazovky</string>
+    <string name="LoginButtonText">Login</string>
+    <string name="preference_file_key">info.stefkovi.studium.mte_bakalarka.PREFERENCES</string>
 </resources>
