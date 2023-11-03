@@ -19,6 +19,9 @@
         android:theme="@style/Theme.MTEBakalarkaapp"
         tools:targetApi="31">
         <activity
+            android:name=".EventGroupActivity"
+            android:exported="false" />
+        <activity
             android:name=".TransferListActivity"
             android:exported="false" />
         <activity
