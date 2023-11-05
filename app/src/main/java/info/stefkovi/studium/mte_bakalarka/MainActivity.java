@@ -1,15 +1,14 @@
 package info.stefkovi.studium.mte_bakalarka;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,13 +22,11 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
-import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseStructureHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
-import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.services.PositionService;
 import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
@@ -72,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 PositionApiModel pos = _positionService.GetCurrentPosition();
                 List<CellInfoApiModel> cells = _telephonyService.getAllCellInfo();
 
-                Toast.makeText(getApplicationContext(), pos.provider, Toast.LENGTH_LONG).show();
+                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                long rowId = db.saveEventData(pos, cells);
+
+                Toast.makeText(getApplicationContext(), String.valueOf(rowId), Toast.LENGTH_SHORT).show();
             }
         });
     }

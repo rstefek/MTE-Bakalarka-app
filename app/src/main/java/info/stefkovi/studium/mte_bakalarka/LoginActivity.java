@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.concurrent.Executors;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
@@ -32,11 +35,30 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Verze Volley
+                ApiCommuncation api = new ApiCommuncation(getApplicationContext());
+                api.Login(loginName.getText().toString(), loginPassword.getText().toString(), new Response.Listener<LoginResultApiModel>() {
+                    @Override
+                    public void onResponse(LoginResultApiModel response) {
+                        preferences.savePrefString("jwt", response.jwt);
+
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        Toast.makeText(getApplicationContext(), error.networkResponse.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                */
 
                 Handler handler = new Handler(Looper.getMainLooper());
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    //Background work here
+
                     LoginResultApiModel res = ApiCommuncation.Login(loginName.getText().toString(), loginPassword.getText().toString());
+
                     if(res != null) {
                         //RecyclerView
 

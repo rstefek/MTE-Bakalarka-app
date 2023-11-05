@@ -37,6 +37,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.android.volley:volley:1.2.1")
     api("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-gson:0.12.3")
