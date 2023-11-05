@@ -1,82 +1,85 @@
 package info.stefkovi.studium.mte_bakalarka.helpers;
 
-import android.util.Log;
+import android.content.Context;
 
+import androidx.annotation.Nullable;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
-import org.json.JSONStringer;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.Executors;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import info.stefkovi.studium.mte_bakalarka.model.LoginApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 
 public class ApiCommuncation {
-    private static String baseURL = "https://bakalarka.beaverlyhills.eu/";
+    //Volley - knihovna na HTTP, Logger
+    private RequestQueue _queue;
+    private String baseURL = "https://bakalarka.beaverlyhills.eu/";
 
-    private static <T> T Request(String urlPath, String method, Object data, Class<T> classOfT) {
-        return Request(urlPath,method,data,classOfT,true);
+    public ApiCommuncation(Context ctx) {
+        this._queue = Volley.newRequestQueue(ctx);
     }
 
-    private static <T> T Request(String urlPath, String method, Object data, Class<T> classOfT, boolean addToken) {
-        URL url = null;
-        try {
-            url = new URL(baseURL + urlPath);
-            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-            urlConnection.setRequestMethod(method);
-            Gson gson = new Gson();
-            urlConnection.setDoInput(true);
+    private class GsonRequest<T> extends JsonRequest<T> {
 
-            if(method.equals("POST")) {
-                //zaslání JSON dat
-                urlConnection.setDoOutput(true);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestProperty("Accept", "application/json");
+        private Class<T> _tClass;
 
-                try {
-                    OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-                    out.write(gson.toJson(data));
-                    out.flush();
-                    out.close();
-                } catch (Exception e){
-                    Log.e("API", e.getMessage());
-                }
-            }
-            //odpověď
-            try {
-                if(urlConnection.getResponseCode() != 200) {
-                    Log.e("API", urlConnection.getResponseMessage());
-                    return null;
-                } else {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    T returnData = gson.fromJson(in, classOfT);
-                    Log.d("API", returnData.toString());
-                    return returnData;
-                }
-            } finally {
-                urlConnection.disconnect();
-            }
-        } catch (MalformedURLException e) {
-            //throw new RuntimeException(e);
-        } catch (IOException e) {
-            //throw new RuntimeException(e);
+        public GsonRequest(int method, String url, @Nullable String requestBody, Response.Listener<T> listener, @Nullable Response.ErrorListener errorListener, Class<T> classOfT) {
+            super(method, url, requestBody, listener, errorListener);
+            _tClass = classOfT;
         }
-        return null;
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            HashMap<String, String> headers = new HashMap<>(super.getHeaders());
+            headers.put("Accept", "application/json");
+            return headers;
+        }
+
+        @Override
+        protected Response<T> parseNetworkResponse(NetworkResponse response) {
+            try {
+                Gson gson = new Gson();
+                String jsonString =
+                        new String(
+                                response.data,
+                                HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+                return Response.success(
+                        gson.fromJson(jsonString, _tClass), HttpHeaderParser.parseCacheHeaders(response));
+            } catch (UnsupportedEncodingException e) {
+                return Response.error(new ParseError(e));
+            } catch ( JsonSyntaxException je) {
+                return Response.error(new ParseError(je));
+            }
+        }
     }
-    public static LoginResultApiModel Login(String user, String pwd) {
+
+    public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT) {
+       GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, baseURL + urlPath, null, responseListener, errorListener, classOfT);
+       _queue.add(req);
+    }
+
+    public <T> void requestPOST(String urlPath, Object data, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT) {
+        Gson gson = new Gson();
+        GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, baseURL + urlPath, gson.toJson(data), responseListener, errorListener, classOfT);
+        _queue.add(req);
+    }
+
+    public void Login(String user, String pwd, Response.Listener<LoginResultApiModel> responseListener, Response.ErrorListener errorListener) {
         LoginApiModel loginData = new LoginApiModel(user, pwd);
-        return Request("auth/local", "POST", loginData, LoginResultApiModel.class, false);
+        requestPOST("auth/local", loginData, responseListener, errorListener, LoginResultApiModel.class);
     }
+
 }

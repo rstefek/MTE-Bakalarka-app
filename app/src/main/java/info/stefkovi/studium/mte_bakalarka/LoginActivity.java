@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,8 +11,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import java.util.concurrent.Executors;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
@@ -35,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* Verze Volley
+                // Verze Volley
                 ApiCommuncation api = new ApiCommuncation(getApplicationContext());
                 api.Login(loginName.getText().toString(), loginPassword.getText().toString(), new Response.Listener<LoginResultApiModel>() {
                     @Override
@@ -52,12 +48,12 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), error.networkResponse.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-                */
 
+                /*
                 Handler handler = new Handler(Looper.getMainLooper());
                 Executors.newSingleThreadExecutor().execute(() -> {
 
-                    LoginResultApiModel res = ApiCommuncation.Login(loginName.getText().toString(), loginPassword.getText().toString());
+                    LoginResultApiModel res = ApiCommuncationOld.Login(loginName.getText().toString(), loginPassword.getText().toString());
 
                     if(res != null) {
                         //RecyclerView
@@ -71,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                         });
                     }
                 });
+                 */
             }
         });
     }
