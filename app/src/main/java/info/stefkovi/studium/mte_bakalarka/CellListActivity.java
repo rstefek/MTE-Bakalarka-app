@@ -17,11 +17,7 @@ public class CellListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cell_list);
 
         RecyclerView recyclerView = findViewById(R.id.recycleView);
-        CellListAdapter adapter = new CellListAdapter( new String[] {
-                "One",
-                "Two",
-                "Three"
-        });
+        CellListAdapter adapter = new CellListAdapter( getApplicationContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         /*

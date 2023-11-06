@@ -1,6 +1,8 @@
 package info.stefkovi.studium.mte_bakalarka;
 
 
+import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +10,22 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseStructureHelper;
+import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+
 
 public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHolder> {
 
-    private String[] localDataSet;
+    private ArrayList<CellInfoApiModel> cells;
+    private DatabaseHelper db;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -32,14 +46,19 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
         }
     }
 
-    /**
-     * Initialize the dataset of the Adapter
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView
-     */
-    public CellListAdapter(String[] dataSet) {
-        localDataSet = dataSet;
+    private void loadData() {
+        Gson gson = new Gson();
+        long last = db.getLastEventId();
+        String data = db.getEventDataCells(last);
+
+        Type cellListType = new TypeToken<ArrayList<CellInfoApiModel>>(){}.getType();
+        cells = gson.fromJson(data, cellListType);
+
+    }
+
+    public CellListAdapter(Context ctx) {
+        db = new DatabaseHelper(ctx);
+        loadData();
     }
 
     // Create new views (invoked by the layout manager)
@@ -58,13 +77,17 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localDataSet[position]);
+        /*
+        dataCursor.moveToPosition(position);
+        String cells = dataCursor.getString(dataCursor.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS));
+         */
+        viewHolder.getTextView().setText(cells.get(position).toString());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return cells.size();
     }
 }
 
