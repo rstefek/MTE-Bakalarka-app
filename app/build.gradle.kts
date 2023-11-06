@@ -39,4 +39,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.auth0.android:jwtdecode:2.0.2")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }

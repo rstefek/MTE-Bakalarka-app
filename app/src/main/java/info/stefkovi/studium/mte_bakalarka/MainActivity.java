@@ -97,9 +97,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CellListActivity.class);
+                /*
                 Bundle b = new Bundle();
                 b.putString("klic1","hodnota");
-                i.putExtras(b);
+                i.putExtras(b);*/
                 startActivity(i);
             }
         });
