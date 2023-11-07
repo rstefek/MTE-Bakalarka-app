@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 PositionApiModel pos = _positionService.GetCurrentPosition();
                 List<CellInfoApiModel> cells = _telephonyService.getAllCellInfo();
 
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
                 long rowId = db.saveEventData(pos, cells);
 
                 Toast.makeText(getApplicationContext(), String.valueOf(rowId), Toast.LENGTH_SHORT).show();

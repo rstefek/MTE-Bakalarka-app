@@ -2,7 +2,6 @@ package info.stefkovi.studium.mte_bakalarka;
 
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseStructureHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 
 
@@ -57,7 +54,7 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
     }
 
     public CellListAdapter(Context ctx) {
-        db = new DatabaseHelper(ctx);
+        db = DatabaseHelper.getInstance(ctx);
         loadData();
     }
 

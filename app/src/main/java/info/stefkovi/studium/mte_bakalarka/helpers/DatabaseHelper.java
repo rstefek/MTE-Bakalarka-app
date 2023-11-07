@@ -14,8 +14,19 @@ import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class DatabaseHelper {
     private SQLiteDatabase _db;
+    private static DatabaseHelper _instance = null;
 
-    public DatabaseHelper(Context ctx) {
+    // Static method
+    // Static method to create instance of Singleton class
+    public static synchronized DatabaseHelper getInstance(Context ctx)
+    {
+        if (_instance == null)
+            _instance = new DatabaseHelper(ctx);
+
+        return _instance;
+    }
+
+    private DatabaseHelper(Context ctx) {
         _db = new DatabaseStructureHelper(ctx).getWritableDatabase();
     }
 
