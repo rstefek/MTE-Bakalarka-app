@@ -1,10 +1,10 @@
 package info.stefkovi.studium.mte_bakalarka;
 
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,18 +29,29 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
      * (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final TextView cellId;
+        private final TextView signalAsu;
+        private final TextView signalDbm;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textView = (TextView) view.findViewById(R.id.textView);
+            cellId = (TextView) view.findViewById(R.id.cellId);
+            signalAsu = (TextView) view.findViewById(R.id.signalAsu);
+            signalDbm = (TextView) view.findViewById(R.id.signalDbm);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getTextViewCellId() {
+            return cellId;
         }
+        public TextView getTextViewSignalAsu() {
+            return signalAsu;
+        }
+        public TextView getTextViewSignalDbm() {
+            return signalDbm;
+        }
+
     }
 
     private void loadData() {
@@ -68,17 +79,14 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
         return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        /*
-        dataCursor.moveToPosition(position);
-        String cells = dataCursor.getString(dataCursor.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS));
-         */
-        viewHolder.getTextView().setText(cells.get(position).toString());
+        CellInfoApiModel cell = cells.get(position);
+
+        viewHolder.getTextViewCellId().setText(String.valueOf(cell.identity.cid));
+        viewHolder.getTextViewSignalAsu().setText(String.valueOf(cell.signal.signal_asu));
+        viewHolder.getTextViewSignalDbm().setText(String.valueOf(cell.signal.signal_dbm));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

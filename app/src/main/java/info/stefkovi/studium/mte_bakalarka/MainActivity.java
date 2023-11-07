@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
-                enableActivityActions();
+                enableActivityActions(null);
                 /*if (isGrantedList.containsKey("A")) {} */
             });
     private String[] permissionsWanted = {
@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
         android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
     };
 
-    private void enableActivityActions() {
+    private void enableActivityActions(Bundle savedInstanceState) {
 
         _telephonyService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
         MapView mapView = (MapView) findViewById(R.id.mapView);
 
-        mapView.onCreate(null);
+        mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(49.8336850, 18.1636014)));
@@ -86,11 +86,8 @@ public class MainActivity extends AppCompatActivity {
         if (!accepted) {
             requestPermissionLauncher.launch(permissionsWanted);
         } else {
-            enableActivityActions();
+            enableActivityActions(savedInstanceState);
         }
-
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
 
         Button btn2 = (Button) findViewById(R.id.button2);
         btn2.setOnClickListener(new View.OnClickListener() {
