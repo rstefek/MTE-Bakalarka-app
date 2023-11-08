@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     // Verze Volley
                     ApiCommuncation api = new ApiCommuncation(getApplicationContext());
-                    api.Login(loginName.getText().toString(), loginPassword.getText().toString(), new Response.Listener<LoginResultApiModel>() {
+                    api.login(loginName.getText().toString(), loginPassword.getText().toString(), new Response.Listener<LoginResultApiModel>() {
                         @Override
                         public void onResponse(LoginResultApiModel response) {
                             preferences.savePrefString("jwt", response.jwt);

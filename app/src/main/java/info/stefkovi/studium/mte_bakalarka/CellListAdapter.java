@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.TypeTokenHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 
 
@@ -30,6 +31,8 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView cellId;
+        private final TextView cellLac;
+        private final TextView cellTac;
         private final TextView signalAsu;
         private final TextView signalDbm;
 
@@ -38,6 +41,8 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
             // Define click listener for the ViewHolder's View
 
             cellId = (TextView) view.findViewById(R.id.cellId);
+            cellLac = (TextView) view.findViewById(R.id.cellLac);
+            cellTac = (TextView) view.findViewById(R.id.cellTac);
             signalAsu = (TextView) view.findViewById(R.id.signalAsu);
             signalDbm = (TextView) view.findViewById(R.id.signalDbm);
         }
@@ -51,17 +56,20 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
         public TextView getTextViewSignalDbm() {
             return signalDbm;
         }
+        public TextView getTextViewCellLac() {
+            return cellLac;
+        }
+
+        public TextView getTextViewCellTac() {
+            return cellTac;
+        }
 
     }
 
     private void loadData() {
         Gson gson = new Gson();
         long last = db.getLastEventId();
-        String data = db.getEventDataCells(last);
-
-        Type cellListType = new TypeToken<ArrayList<CellInfoApiModel>>(){}.getType();
-        cells = gson.fromJson(data, cellListType);
-
+        cells = db.getEventDataCells(last);
     }
 
     public CellListAdapter(Context ctx) {
@@ -85,6 +93,8 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
         CellInfoApiModel cell = cells.get(position);
 
         viewHolder.getTextViewCellId().setText(String.valueOf(cell.identity.cid));
+        viewHolder.getTextViewCellLac().setText(String.valueOf(cell.identity.lac));
+        viewHolder.getTextViewCellTac().setText(String.valueOf(cell.identity.tac));
         viewHolder.getTextViewSignalAsu().setText(String.valueOf(cell.signal.signal_asu));
         viewHolder.getTextViewSignalDbm().setText(String.valueOf(cell.signal.signal_dbm));
     }

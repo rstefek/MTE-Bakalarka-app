@@ -27,6 +27,18 @@
         android:text="" />
 
     <TextView
+        android:id="@+id/cellLac"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/cellTac"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:text="" />
+
+    <TextView
         android:id="@+id/signalAsu"
         android:layout_width="80dp"
         android:layout_height="match_parent"

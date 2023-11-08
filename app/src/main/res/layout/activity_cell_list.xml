@@ -10,7 +10,7 @@
         android:id="@+id/topHeader"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="#B39DDB"
+        android:background="@color/primary"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/recycleView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,17 +19,34 @@
 
         <TextView
             android:layout_width="100dp"
+            android:textColor="@color/white"
             android:layout_height="match_parent"
             android:text="@string/CellListTopCid" />
 
         <TextView
+            android:layout_width="50dp"
+            android:textColor="@color/white"
+            android:layout_height="match_parent"
+            android:text="@string/CellListTopLac"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:layout_width="50dp"
+            android:textColor="@color/white"
+            android:layout_height="match_parent"
+            android:text="@string/CellListTopTac"
+            android:textAlignment="textEnd" />
+
+        <TextView
             android:layout_width="80dp"
+            android:textColor="@color/white"
             android:layout_height="match_parent"
             android:text="@string/CellListTopSignalAsu"
             android:textAlignment="textEnd" />
 
         <TextView
             android:layout_width="80dp"
+            android:textColor="@color/white"
             android:layout_height="match_parent"
             android:text="@string/CellListTopSignalDbm"
             android:textAlignment="textEnd" />

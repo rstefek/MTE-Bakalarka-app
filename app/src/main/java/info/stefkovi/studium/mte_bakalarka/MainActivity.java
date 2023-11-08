@@ -14,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -21,11 +23,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
+import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.services.PositionService;
 import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
@@ -71,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
-        Button btn = (Button) findViewById(R.id.button1);
+        Button btn = (Button) findViewById(R.id.buttonGetCells);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         });
 
-        Button btn2 = (Button) findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener() {
+        Button btnDetail = (Button) findViewById(R.id.buttonDetail);
+        btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CellListActivity.class);
@@ -114,6 +121,31 @@ public class MainActivity extends AppCompatActivity {
                 b.putString("klic1","hodnota");
                 i.putExtras(b);*/
                 startActivity(i);
+            }
+        });
+
+        Button btnSend = (Button) findViewById(R.id.buttonSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+                ArrayList<EventModel> events = db.getEventsToSend();
+                for ( EventModel event: events) {
+                    ApiCommuncation api = new ApiCommuncation(getApplicationContext());
+                    api.sendEvent(event, new Response.Listener<EventResultModel>() {
+                        @Override
+                        public void onResponse(EventResultModel response) {
+                            db.markEventAsSend(event.dbId);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                            Toast.makeText(getApplicationContext(), error.networkResponse.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
         });
     }
