@@ -22,20 +22,22 @@
 
     <TextView
         android:id="@+id/cellId"
-        android:layout_width="120dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
         android:text="" />
 
     <TextView
         android:id="@+id/signalAsu"
-        android:layout_width="70dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:text="" />
+        android:text=""
+        android:textAlignment="textEnd" />
 
     <TextView
         android:id="@+id/signalDbm"
-        android:layout_width="70dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:text="" />
+        android:text=""
+        android:textAlignment="textEnd" />
 
 </LinearLayout>

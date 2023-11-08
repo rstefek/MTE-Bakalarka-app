@@ -5,4 +5,7 @@
     <string name="Button2Text">Detail</string>
     <string name="LoginButtonText">Login</string>
     <string name="preference_file_key">info.stefkovi.studium.mte_bakalarka.PREFERENCES</string>
+    <string name="CellListTopCid">Cell ID</string>
+    <string name="CellListTopSignalAsu">Signal ASU</string>
+    <string name="CellListTopSignalDbm">Signal dBm</string>
 </resources>

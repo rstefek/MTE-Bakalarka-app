@@ -6,13 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".CellListActivity">
 
+    <LinearLayout
+        android:id="@+id/topHeader"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#B39DDB"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/recycleView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="@string/CellListTopCid" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/CellListTopSignalAsu"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="@string/CellListTopSignalDbm"
+            android:textAlignment="textEnd" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/topHeader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
