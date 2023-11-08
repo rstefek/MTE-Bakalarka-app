@@ -1,9 +1,7 @@
 package info.stefkovi.studium.mte_bakalarka;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -20,11 +18,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseStructureHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
-                enableActivityActions(null);
+                enableActivityActions();
                 /*if (isGrantedList.containsKey("A")) {} */
             });
     private String[] permissionsWanted = {
@@ -48,25 +47,35 @@ public class MainActivity extends AppCompatActivity {
         android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
     };
 
-    private void enableActivityActions(Bundle savedInstanceState) {
+    private void enableActivityActions() {
 
         _telephonyService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(googleMap -> {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(49.8336850, 18.1636014)));
-            googleMap.moveCamera(CameraUpdateFactory.zoomTo(11));
+        _positionService.setPositionUpdatedListener(positionApiModel -> {
+            Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
+            MapView mapView = (MapView) findViewById(R.id.mapView);
+            mapView.getMapAsync(googleMap -> {
+                LatLng latlng = new LatLng(positionApiModel.lat, positionApiModel.lon);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                Marker marker = _positionService.getMyPositionMarker();
+                if(marker == null) {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latlng);
+                    marker = googleMap.addMarker(markerOptions);
+                    _positionService.setMyPositionMarker(marker);
+                } else {
+                    marker.setPosition(latlng);
+                }
+            });
         });
 
         Button btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PositionApiModel pos = _positionService.GetCurrentPosition();
+                PositionApiModel pos = _positionService.getCurrentPosition();
                 List<CellInfoApiModel> cells = _telephonyService.getAllCellInfo();
 
                 DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
@@ -86,8 +95,14 @@ public class MainActivity extends AppCompatActivity {
         if (!accepted) {
             requestPermissionLauncher.launch(permissionsWanted);
         } else {
-            enableActivityActions(savedInstanceState);
+            enableActivityActions();
         }
+
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        });
 
         Button btn2 = (Button) findViewById(R.id.button2);
         btn2.setOnClickListener(new View.OnClickListener() {
