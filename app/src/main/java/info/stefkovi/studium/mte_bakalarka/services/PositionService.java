@@ -20,10 +20,17 @@ public class PositionService implements LocationListener {
 
     private Marker myPositionMarker = null;
 
-    @SuppressLint("MissingPermission")
     public PositionService(LocationManager manager) {
         this._manager = manager;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void activateGathering() {
         _manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10000, 0, this);
+    }
+
+    public void deactivateGathering() {
+        _manager.removeUpdates(this);
     }
 
     public Marker getMyPositionMarker() {

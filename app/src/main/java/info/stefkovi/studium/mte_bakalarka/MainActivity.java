@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
         _positionService.setPositionUpdatedListener(positionApiModel -> {
-            Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
             MapView mapView = (MapView) findViewById(R.id.mapView);
             mapView.getMapAsync(googleMap -> {
                 LatLng latlng = new LatLng(positionApiModel.lat, positionApiModel.lon);
@@ -76,6 +79,20 @@ public class MainActivity extends AppCompatActivity {
                     marker.setPosition(latlng);
                 }
             });
+        });
+
+        Switch swActivate = (Switch) findViewById(R.id.swActivate);
+        swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.SwitchActivateConfirm), Toast.LENGTH_SHORT).show();
+                    _positionService.activateGathering();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
+                    _positionService.deactivateGathering();
+                }
+            }
         });
 
         Button btn = (Button) findViewById(R.id.buttonGetCells);
@@ -104,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             enableActivityActions();
         }
+
+        ImageView ivSignal = (ImageView) findViewById(R.id.ivSignalStrength);
+        ivSignal.setImageDrawable(getDrawable(R.drawable.signal_3));
 
         MapView mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);

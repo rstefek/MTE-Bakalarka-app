@@ -11,4 +11,8 @@
     <string name="CellListTopTac">TAC</string>
     <string name="CellListTopSignalAsu">Signal ASU</string>
     <string name="CellListTopSignalDbm">Signal dBm</string>
+    <string name="SwitchActivate">Aktivuj sběr</string>
+    <string name="CellUpdateLabel">Poslední aktualizace buněk:</string>
+    <string name="SwitchActivateConfirm">Sběr aktivován!</string>
+    <string name="SwitchDeactivateConfirm">Svěr ukončen</string>
 </resources>

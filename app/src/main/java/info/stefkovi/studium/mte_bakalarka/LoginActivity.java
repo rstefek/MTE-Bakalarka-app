@@ -77,9 +77,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
-            //jdeme na main screen pokud máme tokena
+            //jdeme na main screen pokud máme tokena. na login už se nevracíme
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(i);
+            this.finish();
         }
     }
 }
