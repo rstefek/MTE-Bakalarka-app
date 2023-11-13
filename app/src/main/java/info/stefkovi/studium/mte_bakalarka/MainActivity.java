@@ -8,8 +8,10 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -105,6 +107,28 @@ public class MainActivity extends AppCompatActivity {
                 DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
                 long rowId = db.saveEventData(pos, cells);
 
+                try {
+                    CellInfoApiModel connectedCell = cells.stream().filter(cell -> cell.registered == true).findFirst().get();
+
+                    TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
+                    //tvLastCellUpdate.setText(String.valueOf(connectedCell));
+
+                    TextView tvCellCIDValue = (TextView) findViewById(R.id.tvCellCIDValue);
+                    tvCellCIDValue.setText(String.valueOf(connectedCell.identity.cid));
+
+                    TextView tvCellTACValue = (TextView) findViewById(R.id.tvCellTACValue);
+                    tvCellTACValue.setText(String.valueOf(connectedCell.identity.tac));
+
+                    TextView tvCellLACValue = (TextView) findViewById(R.id.tvCellLACValue);
+                    tvCellLACValue.setText(String.valueOf(connectedCell.identity.lac));
+
+                    TextView tvCellSignalValue = (TextView) findViewById(R.id.tvCellSignalValue);
+                    tvCellSignalValue.setText(String.valueOf(connectedCell.signal.signal_dbm));
+                }
+                catch (Exception e) {
+
+                }
+
                 Toast.makeText(getApplicationContext(), String.valueOf(rowId), Toast.LENGTH_SHORT).show();
             }
         });
@@ -129,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        });
+
+        ImageButton btnSettings = (ImageButton) findViewById(R.id.ibSettings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(i);
+            }
         });
 
         Button btnDetail = (Button) findViewById(R.id.buttonDetail);

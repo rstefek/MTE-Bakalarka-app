@@ -57,38 +57,110 @@
             app:srcCompat="@drawable/singal_disconnected" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <Button
-        android:id="@+id/buttonGetCells"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/ButtonGetCellsText"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cellInfo"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topWidget" />
+        app:layout_constraintTop_toBottomOf="@id/topWidget">
 
-    <Button
-        android:id="@+id/buttonDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/ButtonDetailText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonGetCells" />
+        <Button
+            android:id="@+id/buttonGetCells"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/ButtonGetCellsText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDetail" />
 
-    <Button
-        android:id="@+id/buttonSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/ButtonSendText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonDetail" />
+        <Button
+            android:id="@+id/buttonDetail"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/ButtonDetailText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCellCID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/CellListTopCid"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCellCIDValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            app:layout_constraintStart_toStartOf="@+id/tvCellCID"
+            app:layout_constraintTop_toTopOf="@+id/tvCellCID" />
+
+        <TextView
+            android:id="@+id/tvCellTAC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/CellListTopTac"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCellCID" />
+
+        <TextView
+            android:id="@+id/tvCellTACValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            app:layout_constraintStart_toStartOf="@+id/tvCellTAC"
+            app:layout_constraintTop_toTopOf="@+id/tvCellTAC" />
+
+        <TextView
+            android:id="@+id/tvCellLAC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/CellListTopLac"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCellTAC" />
+
+        <TextView
+            android:id="@+id/tvCellLACValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            app:layout_constraintStart_toStartOf="@+id/tvCellLAC"
+            app:layout_constraintTop_toTopOf="@+id/tvCellLAC" />
+
+        <TextView
+            android:id="@+id/tvCellSignal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:text="@string/CellListTopSignalDbm"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvCellCIDValue"
+            app:layout_constraintTop_toTopOf="@+id/tvCellCIDValue" />
+
+        <TextView
+            android:id="@+id/tvCellSignalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            app:layout_constraintStart_toStartOf="@+id/tvCellSignal"
+            app:layout_constraintTop_toTopOf="@+id/tvCellSignal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activateWidget"
@@ -97,7 +169,7 @@
         android:layout_marginTop="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonSend">
+        app:layout_constraintTop_toBottomOf="@id/cellInfo">
 
         <Switch
             android:id="@+id/swActivate"
@@ -132,7 +204,6 @@
         android:layout_height="60dp"
         android:background="@color/primary_light"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activateWidget">
 
@@ -140,15 +211,25 @@
             android:id="@+id/progressBar"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:max="100"
             android:progress="60"
             android:progressTint="@color/primary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonSend"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/ButtonSendText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

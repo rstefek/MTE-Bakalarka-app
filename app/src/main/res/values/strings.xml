@@ -14,5 +14,5 @@
     <string name="SwitchActivate">Aktivuj sběr</string>
     <string name="CellUpdateLabel">Poslední aktualizace buněk:</string>
     <string name="SwitchActivateConfirm">Sběr aktivován!</string>
-    <string name="SwitchDeactivateConfirm">Svěr ukončen</string>
+    <string name="SwitchDeactivateConfirm">Sběr ukončen</string>
 </resources>
