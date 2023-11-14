@@ -1,10 +1,11 @@
 package info.stefkovi.studium.mte_bakalarka;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -37,15 +38,14 @@ import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
-import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
+import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
 import info.stefkovi.studium.mte_bakalarka.services.PositionService;
 import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TelephonyService _telephonyService;
-    private PositionService _positionService;
+    private BackgroundWorkerService _bwService;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
@@ -59,29 +59,46 @@ public class MainActivity extends AppCompatActivity {
         android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
     };
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            BackgroundWorkerService.ServiceBinder binder = (BackgroundWorkerService.ServiceBinder) service;
+            _bwService = binder.getService();
+
+            PositionService positionService = _bwService.getPositionService();
+
+            positionService.setPositionUpdatedListener(positionApiModel -> {
+                //Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
+                MapView mapView = (MapView) findViewById(R.id.mapView);
+                mapView.getMapAsync(googleMap -> {
+                    LatLng latlng = new LatLng(positionApiModel.lat, positionApiModel.lon);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+                    googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                    Marker marker = positionService.getMyPositionMarker();
+                    if(marker == null) {
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latlng);
+                        marker = googleMap.addMarker(markerOptions);
+                        positionService.setMyPositionMarker(marker);
+                    } else {
+                        marker.setPosition(latlng);
+                    }
+                });
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            _bwService = null;
+        }
+    };
+
     private void enableActivityActions() {
 
-        _telephonyService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
-        _positionService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+        Intent serviceIntent = new Intent(this, BackgroundWorkerService.class);
 
-        _positionService.setPositionUpdatedListener(positionApiModel -> {
-            //Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
-            MapView mapView = (MapView) findViewById(R.id.mapView);
-            mapView.getMapAsync(googleMap -> {
-                LatLng latlng = new LatLng(positionApiModel.lat, positionApiModel.lon);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                Marker marker = _positionService.getMyPositionMarker();
-                if(marker == null) {
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latlng);
-                    marker = googleMap.addMarker(markerOptions);
-                    _positionService.setMyPositionMarker(marker);
-                } else {
-                    marker.setPosition(latlng);
-                }
-            });
-        });
+        startForegroundService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         Switch swActivate = (Switch) findViewById(R.id.swActivate);
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -89,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchActivateConfirm), Toast.LENGTH_SHORT).show();
-                    _positionService.activateGathering();
+                    _bwService.getPositionService().activateGathering();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
-                    _positionService.deactivateGathering();
+                    _bwService.getPositionService().deactivateGathering();
                 }
             }
         });
@@ -101,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PositionApiModel pos = _positionService.getCurrentPosition();
-                List<CellInfoApiModel> cells = _telephonyService.getAllCellInfo();
+                PositionApiModel pos = _bwService.getPositionService().getCurrentPosition();
+                List<CellInfoApiModel> cells = _bwService.getTelephonyService().getAllCellInfo();
 
                 DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
                 long rowId = db.saveEventData(pos, cells);

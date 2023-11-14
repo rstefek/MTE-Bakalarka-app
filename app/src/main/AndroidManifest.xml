@@ -48,7 +48,7 @@
             android:value="AIzaSyCBZj8roNr4ipdfk_Fm-3aHcD4ox8ARtBA" />
 
         <service
-            android:name=".services.BackgroundWorker"
+            android:name=".services.BackgroundWorkerService"
             android:enabled="true"
             android:exported="true" />
 
