@@ -35,6 +35,7 @@ import java.util.List;
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
+import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
@@ -65,25 +66,35 @@ public class MainActivity extends AppCompatActivity {
             BackgroundWorkerService.ServiceBinder binder = (BackgroundWorkerService.ServiceBinder) service;
             _bwService = binder.getService();
 
-            PositionService positionService = _bwService.getPositionService();
+            _bwService.setUpdatedListener(new BackgroundServiceUpdatedListener() {
+                @Override
+                public void onPositionUpdated(PositionApiModel position) {
+                    MapView mapView = (MapView) findViewById(R.id.mapView);
+                    mapView.getMapAsync(googleMap -> {
+                        LatLng latlng = new LatLng(position.lat, position.lon);
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+                        googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        Marker marker = _bwService.getPositionService().getMyPositionMarker();
+                        if(marker == null) {
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(latlng);
+                            marker = googleMap.addMarker(markerOptions);
+                            _bwService.getPositionService().setMyPositionMarker(marker);
+                        } else {
+                            marker.setPosition(latlng);
+                        }
+                    });
+                }
 
-            positionService.setPositionUpdatedListener(positionApiModel -> {
-                //Toast.makeText(getApplicationContext(), "Position changed", Toast.LENGTH_LONG).show();
-                MapView mapView = (MapView) findViewById(R.id.mapView);
-                mapView.getMapAsync(googleMap -> {
-                    LatLng latlng = new LatLng(positionApiModel.lat, positionApiModel.lon);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                    googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                    Marker marker = positionService.getMyPositionMarker();
-                    if(marker == null) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latlng);
-                        marker = googleMap.addMarker(markerOptions);
-                        positionService.setMyPositionMarker(marker);
-                    } else {
-                        marker.setPosition(latlng);
-                    }
-                });
+                @Override
+                public void onCellsUpdated(List<CellInfoApiModel> cells) {
+
+                }
+
+                @Override
+                public void onEvent(EventModel event) {
+
+                }
             });
         }
 

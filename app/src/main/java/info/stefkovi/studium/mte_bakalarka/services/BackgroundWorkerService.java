@@ -8,9 +8,15 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 
+import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
+import info.stefkovi.studium.mte_bakalarka.listeners.PositionUpdatedListener;
+import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
+
 public class BackgroundWorkerService extends Service {
     private TelephonyService _teleService;
     private PositionService _posService;
+
+    private BackgroundServiceUpdatedListener serviceUpdatedListener;
 
     public class ServiceBinder extends Binder {
         public BackgroundWorkerService getService() {
@@ -20,11 +26,25 @@ public class BackgroundWorkerService extends Service {
 
     private void setupInternalServices() {
         if(_teleService == null) {
-            this._teleService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
+            _teleService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         }
         if(_posService == null) {
-            this._posService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+            _posService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+            _posService.setPositionUpdatedListener(positionUpdatedListener);
         }
+    }
+
+    private final PositionUpdatedListener positionUpdatedListener = new PositionUpdatedListener() {
+        @Override
+        public void onPositionUpdated(PositionApiModel position) {
+            if(serviceUpdatedListener != null) {
+                serviceUpdatedListener.onPositionUpdated(position);
+            }
+        }
+    };
+
+    public void setUpdatedListener(BackgroundServiceUpdatedListener listener) {
+        serviceUpdatedListener = listener;
     }
 
     public TelephonyService getTelephonyService() {
