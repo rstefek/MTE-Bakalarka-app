@@ -20,7 +20,6 @@ import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class DatabaseHelper {
     private SQLiteDatabase _db;
-    private DateTimeFormatter _dateTimeFormatter;
     private static DatabaseHelper _instance = null;
 
     // Static method
@@ -35,16 +34,16 @@ public class DatabaseHelper {
 
     private DatabaseHelper(Context ctx) {
         _db = new DatabaseStructureHelper(ctx).getWritableDatabase();
-        _dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
     }
 
-    public long saveEventData(PositionApiModel pos, List<CellInfoApiModel> cells) {
+    public long saveEventData(EventModel event) {
         Gson gson = new Gson();
         ContentValues values = new ContentValues();
         values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, 0);
-        values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION, gson.toJson(pos));
-        values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS, gson.toJson(cells));
-        values.put(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP, _dateTimeFormatter.format(LocalDateTime.now()));
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_UUID, event.uid.toString());
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION, gson.toJson(event.position));
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS, gson.toJson(event.cells));
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP, DateTimeFormatter.ISO_DATE_TIME.format(event.happened));
         return _db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
     }
 
@@ -85,22 +84,21 @@ public class DatabaseHelper {
     public ArrayList<EventModel> getEventsToSend() {
         Cursor c = _db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_ID,
+                DatabaseStructureHelper.EVENT_COLUMN_UUID,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION,
                 DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP
         }, DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null, null, null, null);
 
         Gson gson = new Gson();
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
         ArrayList<EventModel> events = new ArrayList<>();
 
         while (c.moveToNext()) {
-            EventModel event = new EventModel();
-            event.dbId = c.getLong(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_ID));
-            event.uid = UUID.randomUUID();
+            EventModel event = new EventModel(c.getLong(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_ID)));
+            event.uid = UUID.fromString(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_UUID)));
             event.cells = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS)), TypeTokenHelper.getCellListType());
             event.position = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION)), PositionApiModel.class);
-            event.happened = c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP));
+            event.happened = LocalDateTime.parse(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP)), DateTimeFormatter.ISO_DATE_TIME);;
             events.add(event);
         }
 

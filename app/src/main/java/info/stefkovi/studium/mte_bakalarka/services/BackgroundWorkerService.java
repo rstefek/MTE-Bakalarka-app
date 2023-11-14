@@ -8,9 +8,14 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 
+import java.util.List;
+
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.listeners.PositionUpdatedListener;
+import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 
 public class BackgroundWorkerService extends Service {
     private TelephonyService _teleService;
@@ -37,8 +42,16 @@ public class BackgroundWorkerService extends Service {
     private final PositionUpdatedListener positionUpdatedListener = new PositionUpdatedListener() {
         @Override
         public void onPositionUpdated(PositionApiModel position) {
+            List<CellInfoApiModel> cells = _teleService.getAllCellInfo();
+            EventModel event = new EventModel("", cells, position);
+
+            DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+            event.dbId = db.saveEventData(event);
+
             if(serviceUpdatedListener != null) {
+                serviceUpdatedListener.onCellsUpdated(cells);
                 serviceUpdatedListener.onPositionUpdated(position);
+                serviceUpdatedListener.onEvent(event);
             }
         }
     };
@@ -53,6 +66,14 @@ public class BackgroundWorkerService extends Service {
 
     public PositionService getPositionService() {
         return _posService;
+    }
+
+    public void start() {
+        _posService.activateGathering();
+    }
+
+    public void stop() {
+        _posService.deactivateGathering();
     }
 
     private final IBinder iBinder = new ServiceBinder();

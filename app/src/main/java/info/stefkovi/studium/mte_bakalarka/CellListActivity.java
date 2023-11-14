@@ -20,13 +20,6 @@ public class CellListActivity extends AppCompatActivity {
         CellListAdapter adapter = new CellListAdapter( getApplicationContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        /*
-        Intent in = getIntent();
-        if(in != null) {
-            Bundle b = in.getExtras();
-            b.getString("klic1", "kdyby nahodou");
-        }
-         */
     }
 
 }

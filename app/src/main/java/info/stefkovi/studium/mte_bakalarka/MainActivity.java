@@ -41,8 +41,6 @@ import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
-import info.stefkovi.studium.mte_bakalarka.services.PositionService;
-import info.stefkovi.studium.mte_bakalarka.services.TelephonyService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,12 +86,30 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCellsUpdated(List<CellInfoApiModel> cells) {
+                    try {
+                        CellInfoApiModel connectedCell = cells.stream().filter(cell -> cell.registered == true).findFirst().get();
 
+                        TextView tvCellCIDValue = (TextView) findViewById(R.id.tvCellCIDValue);
+                        tvCellCIDValue.setText(String.valueOf(connectedCell.identity.cid));
+
+                        TextView tvCellTACValue = (TextView) findViewById(R.id.tvCellTACValue);
+                        tvCellTACValue.setText(String.valueOf(connectedCell.identity.tac));
+
+                        TextView tvCellLACValue = (TextView) findViewById(R.id.tvCellLACValue);
+                        tvCellLACValue.setText(String.valueOf(connectedCell.identity.lac));
+
+                        TextView tvCellSignalValue = (TextView) findViewById(R.id.tvCellSignalValue);
+                        tvCellSignalValue.setText(String.valueOf(connectedCell.signal.signal_dbm));
+                    }
+                    catch (Exception e) {
+
+                    }
                 }
 
                 @Override
                 public void onEvent(EventModel event) {
-
+                    TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
+                    tvLastCellUpdate.setText(String.valueOf(event.happened));
                 }
             });
         }
@@ -117,10 +133,10 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchActivateConfirm), Toast.LENGTH_SHORT).show();
-                    _bwService.getPositionService().activateGathering();
+                    _bwService.start();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
-                    _bwService.getPositionService().deactivateGathering();
+                    _bwService.stop();
                 }
             }
         });
@@ -129,35 +145,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PositionApiModel pos = _bwService.getPositionService().getCurrentPosition();
-                List<CellInfoApiModel> cells = _bwService.getTelephonyService().getAllCellInfo();
 
-                DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                long rowId = db.saveEventData(pos, cells);
-
-                try {
-                    CellInfoApiModel connectedCell = cells.stream().filter(cell -> cell.registered == true).findFirst().get();
-
-                    TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
-                    //tvLastCellUpdate.setText(String.valueOf(connectedCell));
-
-                    TextView tvCellCIDValue = (TextView) findViewById(R.id.tvCellCIDValue);
-                    tvCellCIDValue.setText(String.valueOf(connectedCell.identity.cid));
-
-                    TextView tvCellTACValue = (TextView) findViewById(R.id.tvCellTACValue);
-                    tvCellTACValue.setText(String.valueOf(connectedCell.identity.tac));
-
-                    TextView tvCellLACValue = (TextView) findViewById(R.id.tvCellLACValue);
-                    tvCellLACValue.setText(String.valueOf(connectedCell.identity.lac));
-
-                    TextView tvCellSignalValue = (TextView) findViewById(R.id.tvCellSignalValue);
-                    tvCellSignalValue.setText(String.valueOf(connectedCell.signal.signal_dbm));
-                }
-                catch (Exception e) {
-
-                }
-
-                Toast.makeText(getApplicationContext(), String.valueOf(rowId), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,10 +185,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CellListActivity.class);
-                /*
-                Bundle b = new Bundle();
-                b.putString("klic1","hodnota");
-                i.putExtras(b);*/
                 startActivity(i);
             }
         });
