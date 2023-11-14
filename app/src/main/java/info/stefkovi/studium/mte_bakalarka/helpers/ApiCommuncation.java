@@ -17,13 +17,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
-import info.stefkovi.studium.mte_bakalarka.model.EventModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
@@ -99,7 +96,7 @@ public class ApiCommuncation {
         requestPOST("auth/local", loginData, responseListener, errorListener, LoginResultApiModel.class, null);
     }
 
-    public void sendEvent(EventModel event, Response.Listener<EventResultModel> responseListener, Response.ErrorListener errorListener) {
+    public void sendEvent(EventApiModel event, Response.Listener<EventResultModel> responseListener, Response.ErrorListener errorListener) {
         requestPOST("events", event, responseListener, errorListener, EventResultModel.class, getAPIToken());
     }
 

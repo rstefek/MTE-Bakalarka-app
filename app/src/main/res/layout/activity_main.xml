@@ -34,6 +34,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/CellUpdateLabel"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/ibSettings"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,6 +42,7 @@
             android:id="@+id/tvLastCellUpdate"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvCellUpdateLabel"
             app:layout_constraintTop_toBottomOf="@+id/tvCellUpdateLabel" />
@@ -64,16 +66,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topWidget">
-
-        <Button
-            android:id="@+id/buttonGetCells"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/ButtonGetCellsText"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDetail" />
 
         <Button
             android:id="@+id/buttonDetail"
@@ -224,6 +216,7 @@
 
         <Button
             android:id="@+id/buttonSend"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

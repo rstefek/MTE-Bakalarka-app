@@ -13,6 +13,7 @@ import java.util.List;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.listeners.PositionUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
@@ -43,7 +44,7 @@ public class BackgroundWorkerService extends Service {
         @Override
         public void onPositionUpdated(PositionApiModel position) {
             List<CellInfoApiModel> cells = _teleService.getAllCellInfo();
-            EventModel event = new EventModel("", cells, position);
+            EventModel event = new EventModel(cells, position);
 
             DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
             event.dbId = db.saveEventData(event);

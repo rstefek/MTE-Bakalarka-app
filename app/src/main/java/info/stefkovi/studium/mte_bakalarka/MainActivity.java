@@ -34,9 +34,12 @@ import java.util.List;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.JwtHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
@@ -140,14 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        Button btn = (Button) findViewById(R.id.buttonGetCells);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
@@ -194,11 +189,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
+                String token = preferences.readPrefString("jwt");
+
                 DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
                 ArrayList<EventModel> events = db.getEventsToSend();
                 for ( EventModel event: events) {
                     ApiCommuncation api = new ApiCommuncation(getApplicationContext());
-                    api.sendEvent(event, new Response.Listener<EventResultModel>() {
+                    api.sendEvent(new EventApiModel(event, JwtHelper.getUserId(token)), new Response.Listener<EventResultModel>() {
                         @Override
                         public void onResponse(EventResultModel response) {
                             db.markEventAsSend(event.dbId);

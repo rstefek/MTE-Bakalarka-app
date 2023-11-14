@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseStructureHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String DATABASE_NAME = "event_db";
     public static final String EVENT_TABLE_NAME = "events";
@@ -33,7 +33,7 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if(i < 2 && i >= 2) {
+        if(i < 3 && i1 >= 3) {
             sqLiteDatabase.execSQL("ALTER TABLE " + EVENT_TABLE_NAME + " ADD " +
                     EVENT_COLUMN_UUID + " TEXT");
 

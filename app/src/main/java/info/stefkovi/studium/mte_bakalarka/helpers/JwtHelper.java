@@ -9,10 +9,9 @@ public class JwtHelper {
         return jwt.isExpired(3);
     }
 
-    public static String getUserId(String token) {
+    public static int getUserId(String token) {
         JWT jwt = new JWT(token);
-        return jwt.getId();
+        return jwt.getClaim("id").asInt();
     }
-
 
 }

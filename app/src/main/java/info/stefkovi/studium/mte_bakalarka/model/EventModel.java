@@ -9,18 +9,14 @@ public class EventModel {
     public long dbId;
     public UUID uid;
     public LocalDateTime happened;
-    public String network_type;
-    public int user;
     public List<CellInfoApiModel> cells;
     public PositionApiModel position;
 
-    public EventModel(String network_type, List<CellInfoApiModel> cells, PositionApiModel position) {
-        this.network_type = network_type;
+    public EventModel(List<CellInfoApiModel> cells, PositionApiModel position) {
         this.cells = cells;
         this.position = position;
         this.happened = LocalDateTime.now();
         this.uid = UUID.randomUUID();
-        this.user = 0;
     }
 
     public EventModel(long dbId) {
