@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/topHeader"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="@dimen/cell_list_item_height"
         android:background="@color/primary"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/recycleView"

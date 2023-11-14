@@ -30,13 +30,15 @@
         android:id="@+id/cellLac"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:text="" />
+        android:text=""
+        android:textAlignment="textEnd" />
 
     <TextView
         android:id="@+id/cellTac"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:text="" />
+        android:text=""
+        android:textAlignment="textEnd" />
 
     <TextView
         android:id="@+id/signalAsu"
