@@ -20,8 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -29,19 +27,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
-import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
-import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.JwtHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
-import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
-import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
 
@@ -112,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onEvent(EventModel event) {
                     TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
-                    tvLastCellUpdate.setText(String.valueOf(event.happened));
+                    tvLastCellUpdate.setText(event.happened.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                 }
             });
         }
@@ -188,27 +181,8 @@ public class MainActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
-                String token = preferences.readPrefString("jwt");
-
-                DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                ArrayList<EventModel> events = db.getEventsToSend();
-                for ( EventModel event: events) {
-                    ApiCommuncation api = new ApiCommuncation(getApplicationContext());
-                    api.sendEvent(new EventApiModel(event, JwtHelper.getUserId(token)), new Response.Listener<EventResultModel>() {
-                        @Override
-                        public void onResponse(EventResultModel response) {
-                            db.markEventAsSend(event.dbId);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            Toast.makeText(getApplicationContext(), error.networkResponse.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                Intent i = new Intent(getApplicationContext(), TransferListActivity.class);
+                startActivity(i);
             }
         });
     }

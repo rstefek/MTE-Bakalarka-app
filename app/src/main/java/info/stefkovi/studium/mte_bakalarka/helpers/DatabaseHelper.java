@@ -7,11 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
@@ -82,26 +80,51 @@ public class DatabaseHelper {
     }
 
     public ArrayList<EventModel> getEventsToSend() {
+        return getEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null, DatabaseStructureHelper.EVENT_COLUMN_ID);
+    }
+
+    public ArrayList<EventModel> getAllEvents() {
+        return getEvents(null, null, DatabaseStructureHelper.EVENT_COLUMN_ID + " DESC");
+    }
+
+    private ArrayList<EventModel> getEvents(String where, String[] whereArgs, String orderBy) {
         Cursor c = _db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_ID,
                 DatabaseStructureHelper.EVENT_COLUMN_UUID,
+                DatabaseStructureHelper.EVENT_COLUMN_SENT,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION,
                 DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP
-        }, DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null, null, null, null);
+        }, where, whereArgs, null, null, orderBy);
 
         Gson gson = new Gson();
         ArrayList<EventModel> events = new ArrayList<>();
 
         while (c.moveToNext()) {
             EventModel event = new EventModel(c.getLong(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_ID)));
-            event.uid = UUID.fromString(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_UUID)));
+            String uid = c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_UUID));
+            event.uid = (uid != null ? UUID.fromString(uid) : null);
             event.cells = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS)), TypeTokenHelper.getCellListType());
             event.position = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION)), PositionApiModel.class);
-            event.happened = LocalDateTime.parse(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP)), DateTimeFormatter.ISO_DATE_TIME);;
+            event.happened = LocalDateTime.parse(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP)), DateTimeFormatter.ISO_DATE_TIME);
+            event.sent = c.getInt(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_SENT));
             events.add(event);
         }
 
         return events;
     }
+
+    public int deleteProcessed() {
+        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 1", null);
+    }
+
+    public int deleteNotSent() {
+        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null);
+    }
+
+    private int deleteSpecificEvents(String where, String[] whereArgs) {
+        return _db.delete(DatabaseStructureHelper.EVENT_TABLE_NAME, where, whereArgs);
+    }
+
+
 }

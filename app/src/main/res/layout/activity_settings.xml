@@ -6,4 +6,55 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
+    <TextView
+        android:id="@+id/tlSettingDatabase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/SettingsHeaderDatabase"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tlSettingCopyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/SettingsHeaderCopyright"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bDeleteNonSent" />
+
+    <Button
+        android:id="@+id/bDeleteProcessed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/SettingsButtonClearProcessed"
+        app:layout_constraintStart_toStartOf="@+id/tlSettingDatabase"
+        app:layout_constraintTop_toBottomOf="@+id/tlSettingDatabase" />
+
+    <Button
+        android:id="@+id/bDeleteNonSent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/SettingsButtonClearNotSent"
+        app:layout_constraintStart_toStartOf="@+id/tlSettingDatabase"
+        app:layout_constraintTop_toBottomOf="@+id/bDeleteProcessed" />
+
+    <TextView
+        android:id="@+id/tvCopyrightLicence"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/SettingsCopyrightLicence"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tlSettingCopyright"
+        app:layout_constraintTop_toBottomOf="@+id/tlSettingCopyright" />
 </androidx.constraintlayout.widget.ConstraintLayout>

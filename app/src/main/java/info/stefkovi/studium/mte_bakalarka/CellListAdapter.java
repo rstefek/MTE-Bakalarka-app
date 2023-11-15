@@ -1,22 +1,21 @@
 package info.stefkovi.studium.mte_bakalarka;
 
+import static info.stefkovi.studium.mte_bakalarka.helpers.ValueHelper.intToStringWithNA;
+import static info.stefkovi.studium.mte_bakalarka.helpers.ValueHelper.longToStringWithNA;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.TypeTokenHelper;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 
 
@@ -92,9 +91,9 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
 
         CellInfoApiModel cell = cells.get(position);
 
-        viewHolder.getTextViewCellId().setText(String.valueOf(cell.identity.cid));
-        viewHolder.getTextViewCellLac().setText(String.valueOf(cell.identity.lac));
-        viewHolder.getTextViewCellTac().setText(String.valueOf(cell.identity.tac));
+        viewHolder.getTextViewCellId().setText(longToStringWithNA(cell.identity.cid));
+        viewHolder.getTextViewCellLac().setText(intToStringWithNA(cell.identity.lac));
+        viewHolder.getTextViewCellTac().setText(intToStringWithNA(cell.identity.tac));
         viewHolder.getTextViewSignalAsu().setText(String.valueOf(cell.signal.signal_asu));
         viewHolder.getTextViewSignalDbm().setText(String.valueOf(cell.signal.signal_dbm));
     }

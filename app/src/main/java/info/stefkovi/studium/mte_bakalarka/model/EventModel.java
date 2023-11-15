@@ -11,12 +11,14 @@ public class EventModel {
     public LocalDateTime happened;
     public List<CellInfoApiModel> cells;
     public PositionApiModel position;
+    public int sent;
 
     public EventModel(List<CellInfoApiModel> cells, PositionApiModel position) {
         this.cells = cells;
         this.position = position;
         this.happened = LocalDateTime.now();
         this.uid = UUID.randomUUID();
+        this.sent = 0;
     }
 
     public EventModel(long dbId) {

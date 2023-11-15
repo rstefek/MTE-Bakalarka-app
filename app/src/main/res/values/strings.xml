@@ -4,6 +4,7 @@
     <string name="ButtonGetCellsText">Proveď zjištění buňek</string>
     <string name="ButtonDetailText">Detail</string>
     <string name="ButtonSendText">Odeslat data na API</string>
+    <string name="MainButtonTransfer">API přenosy</string>
     <string name="LoginButtonText">Login</string>
     <string name="preference_file_key">info.stefkovi.studium.mte_bakalarka.PREFERENCES</string>
     <string name="CellListTopCid">Cell ID</string>
@@ -12,7 +13,13 @@
     <string name="CellListTopSignalAsu">Signal ASU</string>
     <string name="CellListTopSignalDbm">Signal dBm</string>
     <string name="SwitchActivate">Aktivuj sběr</string>
-    <string name="CellUpdateLabel">Poslední aktualizace buněk:</string>
+    <string name="CellUpdateLabel">Poslední zaznamenaná událost:</string>
     <string name="SwitchActivateConfirm">Sběr aktivován!</string>
     <string name="SwitchDeactivateConfirm">Sběr ukončen</string>
+    <string name="SettingsHeaderDatabase">Údržba databáze</string>
+    <string name="SettingsButtonClearProcessed">Vymazat zpracované záznamy</string>
+    <string name="SettingsButtonClearNotSent">Vymazat neposlané záznamy</string>
+    <string name="SettingsHeaderCopyright">Copyright a licence</string>
+    <string name="SettingsCopyrightLicence">©2023 Roman Štefek (STE0516)</string>
+    <string name="SettingsDatabaseConfirm">Údržba provedena!</string>
 </resources>
