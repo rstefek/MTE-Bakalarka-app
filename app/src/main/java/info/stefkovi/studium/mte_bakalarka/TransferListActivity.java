@@ -1,9 +1,9 @@
 package info.stefkovi.studium.mte_bakalarka;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,13 +49,14 @@ public class TransferListActivity extends AppCompatActivity {
                     api.sendEvent(new EventApiModel(event, JwtHelper.getUserId(token)), new Response.Listener<EventResultModel>() {
                         @Override
                         public void onResponse(EventResultModel response) {
-                            db.markEventAsSend(event.dbId);
+                            db.markEventAsSend(response.uid);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            Toast.makeText(getApplicationContext(), error.networkResponse.toString(), Toast.LENGTH_LONG).show();
+                            if(error.networkResponse != null) {
+                                Log.e("API", error.networkResponse.toString(), error);
+                            }
                         }
                     });
                 }

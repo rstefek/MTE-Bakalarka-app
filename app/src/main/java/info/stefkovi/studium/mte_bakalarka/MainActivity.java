@@ -122,19 +122,24 @@ public class MainActivity extends AppCompatActivity {
 
         Intent serviceIntent = new Intent(this, BackgroundWorkerService.class);
 
-        startForegroundService(serviceIntent);
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
         Switch swActivate = (Switch) findViewById(R.id.swActivate);
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchActivateConfirm), Toast.LENGTH_SHORT).show();
-                    _bwService.start();
+
+                    bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+                    startForegroundService(serviceIntent);
+                    //_bwService.start();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
-                    _bwService.stop();
+
+                    unbindService(serviceConnection);
+
+                    stopService(serviceIntent);
+                    //_bwService.stop();
                 }
             }
         });

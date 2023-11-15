@@ -71,11 +71,11 @@ public class DatabaseHelper {
         }
     }
 
-    public long markEventAsSend(long eventId) {
+    public long markEventAsSend(UUID eventUid) {
         ContentValues values = new ContentValues();
         values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, 1);
-        return _db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_ID + " = ?", new String[]{
-                String.valueOf(eventId)
+        return _db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_UUID + " = ?", new String[]{
+                String.valueOf(eventUid)
         });
     }
 

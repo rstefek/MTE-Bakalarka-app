@@ -88,22 +88,22 @@ public class BackgroundWorkerService extends Service {
     }
 
     private void createNotificationChannel() {
-            CharSequence name = getString(R.string.BgChannelName);
-            String description = getString(R.string.BgChannelDesc);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(CHANNEL_DESC);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
     }
 
     private final String CHANNEL_ID = "MTEBakCH";
+    private final CharSequence CHANNEL_NAME = "MTE Bakalarka APP";
+    private final String CHANNEL_DESC = "Kanál pro aplikaci";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
-        startForeground(startId, new Notification.Builder(getApplicationContext(), CHANNEL_ID).build());
+        startForeground(startId, new Notification.Builder(getApplicationContext(), CHANNEL_ID).setContentTitle(getString(R.string.BgChannelName)).setContentText(getString(R.string.BgChannelDesc)).build());
         setupInternalServices();
+        _posService.activateGathering();
         return START_STICKY;
     }
 }
