@@ -1,5 +1,6 @@
 package info.stefkovi.studium.mte_bakalarka;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -48,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 /*if (isGrantedList.containsKey("A")) {} */
             });
     private String[] permissionsWanted = {
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.READ_PHONE_STATE,
-        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        Manifest.permission.FOREGROUND_SERVICE
     };
 
     private ServiceConnection serviceConnection = new ServiceConnection() {

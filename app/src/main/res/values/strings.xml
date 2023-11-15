@@ -22,4 +22,6 @@
     <string name="SettingsHeaderCopyright">Copyright a licence</string>
     <string name="SettingsCopyrightLicence">©2023 Roman Štefek (STE0516)</string>
     <string name="SettingsDatabaseConfirm">Údržba provedena!</string>
+    <string name="BgChannelName">Sledování polohy na pozadí</string>
+    <string name="BgChannelDesc">Aplikace sleduje na pozadí polohu zařízení, pokud je aplikace nastavena do módu "Aktivuj sběr"</string>
 </resources>
