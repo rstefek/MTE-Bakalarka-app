@@ -20,8 +20,6 @@ public class DatabaseHelper {
     private SQLiteDatabase _db;
     private static DatabaseHelper _instance = null;
 
-    // Static method
-    // Static method to create instance of Singleton class
     public static synchronized DatabaseHelper getInstance(Context ctx)
     {
         if (_instance == null)
@@ -45,11 +43,10 @@ public class DatabaseHelper {
         return _db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
     }
 
-    public long getLastEventId() {
+    public long getUnsentEventsCount() {
         //název tabulky ani sloupce nejde dát jako parametr!!!
-        Cursor c = _db.rawQuery("SELECT MAX("+DatabaseStructureHelper.EVENT_COLUMN_ID+") AS MAX FROM "+DatabaseStructureHelper.EVENT_TABLE_NAME, null);
+        Cursor c = _db.rawQuery("SELECT COUNT("+DatabaseStructureHelper.EVENT_COLUMN_ID+") AS CNT FROM "+DatabaseStructureHelper.EVENT_TABLE_NAME+" WHERE SENT = 0", null);
         if(c.moveToFirst()) {
-            long lastId = c.getLong(0);
             return c.getLong(0);
         } else {
             return 0;

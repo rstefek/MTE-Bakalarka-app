@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
@@ -65,15 +63,13 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
 
     }
 
-    private void loadData() {
-        Gson gson = new Gson();
-        long last = db.getLastEventId();
-        cells = db.getEventDataCells(last);
+    private void loadData(long currId) {
+        cells = db.getEventDataCells(currId);
     }
 
-    public CellListAdapter(Context ctx) {
+    public CellListAdapter(Context ctx, long currId) {
         db = DatabaseHelper.getInstance(ctx);
-        loadData();
+        loadData(currId);
     }
 
     // Create new views (invoked by the layout manager)

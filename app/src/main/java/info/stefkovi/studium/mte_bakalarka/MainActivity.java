@@ -32,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 
+import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
@@ -42,6 +43,7 @@ import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
 public class MainActivity extends AppCompatActivity {
 
     private BackgroundWorkerService _bwService;
+    private long _currentEventId;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
@@ -106,8 +108,17 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onEvent(EventModel event) {
+                    _currentEventId = event.dbId;
+
                     TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
                     tvLastCellUpdate.setText(event.happened.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+
+                    DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+                    long cnt = db.getUnsentEventsCount();
+
+                    TextView tvQueue = (TextView) findViewById(R.id.tvQueue);
+                    tvQueue.setText(getString(R.string.Queue) + ": " + String.valueOf(cnt));
+
                 }
             });
         }
@@ -180,6 +191,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CellListActivity.class);
+                Bundle b = new Bundle();
+                b.putLong("eventId", _currentEventId);
+                i.putExtras(b);
                 startActivity(i);
             }
         });
