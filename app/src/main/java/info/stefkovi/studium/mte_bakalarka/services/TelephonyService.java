@@ -1,17 +1,13 @@
 package info.stefkovi.studium.mte_bakalarka.services;
 
 import android.annotation.SuppressLint;
-import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
-import android.telephony.CellInfoNr;
 import android.telephony.CellInfoWcdma;
-import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
@@ -80,6 +76,7 @@ public class TelephonyService {
                 apiCell.signal.signal_dbm = signalGsm.getDbm();
                 apiCell.signal.signal_asu = signalGsm.getAsuLevel();
                 apiCell.signal.timing_advance = signalGsm.getTimingAdvance();
+                apiCell.signal.level = signalGsm.getLevel();
             }
             else if(cell instanceof CellInfoLte) {
                 CellInfoLte cellLte = (CellInfoLte) cell;
@@ -105,6 +102,7 @@ public class TelephonyService {
                 apiCell.signal.rsrq_dbm = signalLte.getRsrq();
                 apiCell.signal.rssnr_db = signalLte.getRssnr();
                 apiCell.signal.timing_advance = signalLte.getTimingAdvance();
+                apiCell.signal.level = signalLte.getLevel();
             }
             else if(cell instanceof CellInfoWcdma) {
                 CellInfoWcdma cellWCdma = (CellInfoWcdma) cell;
@@ -123,6 +121,7 @@ public class TelephonyService {
                 //Síla signálu
                 apiCell.signal.signal_dbm = signalWCdma.getDbm();
                 apiCell.signal.signal_asu = signalWCdma.getAsuLevel();
+                apiCell.signal.level = signalWCdma.getLevel();
             }
             apiCells.add(apiCell);
         }

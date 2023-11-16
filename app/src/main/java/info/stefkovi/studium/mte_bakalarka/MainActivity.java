@@ -93,6 +93,28 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         CellInfoApiModel connectedCell = cells.stream().filter(cell -> cell.registered == true).findFirst().get();
 
+                        ImageView ivSignal = (ImageView) findViewById(R.id.ivSignalStrength);
+                        switch (connectedCell.signal.level) {
+                            case 4:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.signal_4));
+                                break;
+                            case 3:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.signal_3));
+                                break;
+                            case 2:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.signal_2));
+                                break;
+                            case 1:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.signal_1));
+                                break;
+                            case 0:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.signal_0));
+                                break;
+                            default:
+                                ivSignal.setImageDrawable(getDrawable(R.drawable.singal_disconnected));
+                                break;
+                        }
+
                         TextView tvCellCIDValue = (TextView) findViewById(R.id.tvCellCIDValue);
                         tvCellCIDValue.setText(String.valueOf(connectedCell.identity.cid));
 
@@ -192,9 +214,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             enableActivityActions();
         }
-
-        ImageView ivSignal = (ImageView) findViewById(R.id.ivSignalStrength);
-        ivSignal.setImageDrawable(getDrawable(R.drawable.signal_3));
 
         MapView mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);

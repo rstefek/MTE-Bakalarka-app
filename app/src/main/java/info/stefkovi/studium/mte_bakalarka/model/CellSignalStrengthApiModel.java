@@ -10,5 +10,6 @@ public class CellSignalStrengthApiModel {
     public int rsrp_dbm;
     public int rsrq_dbm;
     public int rssnr_db;
+    public int level;
 
 }
