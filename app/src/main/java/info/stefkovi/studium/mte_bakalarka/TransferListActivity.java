@@ -1,7 +1,6 @@
 package info.stefkovi.studium.mte_bakalarka;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -9,18 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
-
-import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
-import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.JwtHelper;
-import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
-import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
-import info.stefkovi.studium.mte_bakalarka.model.EventModel;
-import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
+import info.stefkovi.studium.mte_bakalarka.listeners.EventQueueUpdatedListener;
+import info.stefkovi.studium.mte_bakalarka.model.EventQueueInfo;
 
 public class TransferListActivity extends AppCompatActivity {
 
@@ -38,29 +27,16 @@ public class TransferListActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
-                String token = preferences.readPrefString("jwt");
-
-                DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                ArrayList<EventModel> events = db.getEventsToSend();
-                for ( EventModel event: events) {
-                    ApiCommuncation api = new ApiCommuncation(getApplicationContext());
-                    api.sendEvent(new EventApiModel(event, JwtHelper.getUserId(token)), new Response.Listener<EventResultModel>() {
-                        @Override
-                        public void onResponse(EventResultModel response) {
-                            db.markEventAsSend(response.uid);
-                            adapter.updateEventSent(response.uid);
+                EventQueue eventQueue = new EventQueue(getApplicationContext());
+                eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
+                    @Override
+                    public void onEventsQueueUpdated(EventQueueInfo queue) {
+                        if(queue.numInQToProcess == 0) {
+                            adapter.reloadData();
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if(error.networkResponse != null) {
-                                Log.e("API", error.networkResponse.toString(), error);
-                            }
-                        }
-                    });
-                }
+                    }
+                });
+                eventQueue.sendEventsBulk();
             }
         });
     }

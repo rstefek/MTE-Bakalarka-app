@@ -88,6 +88,10 @@ public class ApiCommuncation {
         return preferences.readPrefString("jwt");
     }
 
+    public int getAPIUserId() {
+        return JwtHelper.getUserId(getAPIToken());
+    }
+
     public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
        GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, BASE_URL + urlPath, null, responseListener, errorListener, classOfT, useToken);
        _queue.add(req);

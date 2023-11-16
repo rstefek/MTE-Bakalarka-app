@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +34,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 
-import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
+import info.stefkovi.studium.mte_bakalarka.listeners.EventQueueUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventQueueInfo;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BackgroundWorkerService _bwService;
     private long _currentEventId;
+    private EventQueue _eventQueue;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
@@ -113,12 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
                     tvLastCellUpdate.setText(event.happened.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 
-                    DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                    long cnt = db.getUnsentEventsCount();
-
-                    TextView tvQueue = (TextView) findViewById(R.id.tvQueue);
-                    tvQueue.setText(getString(R.string.Queue) + ": " + String.valueOf(cnt));
-
+                    updateEventQueue();
                 }
             });
         }
@@ -129,9 +128,33 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void updateEventQueue() {
+        _eventQueue.onEventAdded();
+    }
+
     private void enableActivityActions() {
 
         Intent serviceIntent = new Intent(this, BackgroundWorkerService.class);
+
+        _eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
+            @Override
+            public void onEventsQueueUpdated(EventQueueInfo queue) {
+                //fronta
+                TextView tvQueue = (TextView) findViewById(R.id.tvQueue);
+                tvQueue.setText(getString(R.string.Queue) + ": " + String.valueOf(queue.numInDbToProcess));
+
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+                progressBar.setMax(queue.numInQTotal);
+                if(queue.numInQToProcess == 0) {
+                    progressBar.setProgress((int) queue.numInDbToProcess);
+                    progressBar.setProgressTintList(ColorStateList.valueOf(getColor(R.color.primary)));
+                } else {
+                    progressBar.setProgress(queue.numInQToProcess);
+                    progressBar.setProgressTintList(ColorStateList.valueOf(getColor(R.color.secondary)));
+                }
+            }
+        });
+        _eventQueue.onEventAdded(); //prvotní načtení
 
         Switch swActivate = (Switch) findViewById(R.id.swActivate);
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -160,6 +183,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        _eventQueue = new EventQueue(getApplicationContext());
 
         boolean accepted = PermissionHelper.AllPermissionsAccepted(this, permissionsWanted);
         if (!accepted) {

@@ -12,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.OptionalInt;
-import java.util.UUID;
-import java.util.stream.IntStream;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
@@ -59,22 +56,14 @@ public class TransferListAdapter extends RecyclerView.Adapter<TransferListAdapte
         events = db.getAllEvents();
     }
 
+    public void reloadData() {
+        loadData();
+        this.notifyDataSetChanged();
+    }
+
     public TransferListAdapter(Context ctx) {
         db = DatabaseHelper.getInstance(ctx);
         loadData();
-    }
-
-    public void updateEventSent(UUID uid) {
-        OptionalInt indexOpt = IntStream.range(0, getItemCount())
-                .filter(i -> uid.equals(events.get(i).uid))
-                .findFirst();
-
-        if(indexOpt.isPresent()) {
-            int idx = indexOpt.getAsInt();
-            EventModel event = events.get(idx);
-            event.sent = 1;
-            this.notifyItemChanged(idx);
-        }
     }
 
     // Create new views (invoked by the layout manager)

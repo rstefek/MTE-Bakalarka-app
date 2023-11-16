@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
@@ -76,8 +77,9 @@ public class DatabaseHelper {
         });
     }
 
-    public ArrayList<EventModel> getEventsToSend() {
-        return getEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null, DatabaseStructureHelper.EVENT_COLUMN_ID);
+    public List<EventModel> getEventsToSend(int num) {
+        ArrayList<EventModel> events = getEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null, DatabaseStructureHelper.EVENT_COLUMN_ID);
+        return num > 0 ? events.subList(0, num) : events;
     }
 
     public ArrayList<EventModel> getAllEvents() {
