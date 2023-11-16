@@ -50,6 +50,7 @@ public class TransferListActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(EventResultModel response) {
                             db.markEventAsSend(response.uid);
+                            adapter.updateEventSent(response.uid);
                         }
                     }, new Response.ErrorListener() {
                         @Override

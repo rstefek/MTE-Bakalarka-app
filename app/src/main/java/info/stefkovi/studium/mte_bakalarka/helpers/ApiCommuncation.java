@@ -5,11 +5,13 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
@@ -29,7 +31,8 @@ public class ApiCommuncation {
     //Volley - knihovna na HTTP, Logger
     private RequestQueue _queue;
     private Context _ctx;
-    private String baseURL = "https://bakalarka.beaverlyhills.eu/";
+    private final String BASE_URL = "https://bakalarka.beaverlyhills.eu/";
+    private final int CONNECTION_TIMEOUT = 15000;
 
     public ApiCommuncation(Context ctx) {
         this._ctx = ctx;
@@ -45,6 +48,11 @@ public class ApiCommuncation {
             super(method, url, requestBody, listener, errorListener);
             _tClass = classOfT;
             _useToken = useToken;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return new DefaultRetryPolicy(CONNECTION_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         }
 
         @Override
@@ -81,13 +89,13 @@ public class ApiCommuncation {
     }
 
     public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
-       GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, baseURL + urlPath, null, responseListener, errorListener, classOfT, useToken);
+       GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, BASE_URL + urlPath, null, responseListener, errorListener, classOfT, useToken);
        _queue.add(req);
     }
 
     public <T> void requestPOST(String urlPath, Object data, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
         Gson gson = new Gson();
-        GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, baseURL + urlPath, gson.toJson(data), responseListener, errorListener, classOfT, useToken);
+        GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, BASE_URL + urlPath, gson.toJson(data), responseListener, errorListener, classOfT, useToken);
         _queue.add(req);
     }
 

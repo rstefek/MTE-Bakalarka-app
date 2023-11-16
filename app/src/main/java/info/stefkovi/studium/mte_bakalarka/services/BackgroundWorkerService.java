@@ -72,14 +72,6 @@ public class BackgroundWorkerService extends Service {
         return _posService;
     }
 
-    public void start() {
-        _posService.activateGathering();
-    }
-
-    public void stop() {
-        _posService.deactivateGathering();
-    }
-
     private final IBinder iBinder = new ServiceBinder();
     @Override
     public IBinder onBind(Intent intent) {
@@ -97,6 +89,12 @@ public class BackgroundWorkerService extends Service {
     private final String CHANNEL_ID = "MTEBakCH";
     private final CharSequence CHANNEL_NAME = "MTE Bakalarka APP";
     private final String CHANNEL_DESC = "Kanál pro aplikaci";
+
+    @Override
+    public void onDestroy() {
+        _posService.deactivateGathering();
+        super.onDestroy();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
