@@ -19,10 +19,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
@@ -41,12 +44,12 @@ public class ApiCommuncation {
 
     private class GsonRequest<T> extends JsonRequest<T> {
 
-        private Class<T> _tClass;
+        private Type _typeOfT;
         private String _useToken;
 
-        public GsonRequest(int method, String url, @Nullable String requestBody, Response.Listener<T> listener, @Nullable Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
+        public GsonRequest(int method, String url, @Nullable String requestBody, Response.Listener<T> listener, @Nullable Response.ErrorListener errorListener, Type typeOfT, String useToken) {
             super(method, url, requestBody, listener, errorListener);
-            _tClass = classOfT;
+            _typeOfT = typeOfT;
             _useToken = useToken;
         }
 
@@ -74,7 +77,7 @@ public class ApiCommuncation {
                                 response.data,
                                 HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
                 return Response.success(
-                        gson.fromJson(jsonString, _tClass), HttpHeaderParser.parseCacheHeaders(response));
+                        gson.fromJson(jsonString, _typeOfT), HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException e) {
                 return Response.error(new ParseError(e));
             } catch ( JsonSyntaxException je) {
@@ -92,14 +95,14 @@ public class ApiCommuncation {
         return JwtHelper.getUserId(getAPIToken());
     }
 
-    public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
-       GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, BASE_URL + urlPath, null, responseListener, errorListener, classOfT, useToken);
+    public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Type typeOfT, String useToken) {
+       GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, BASE_URL + urlPath, null, responseListener, errorListener, typeOfT, useToken);
        _queue.add(req);
     }
 
-    public <T> void requestPOST(String urlPath, Object data, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Class<T> classOfT, String useToken) {
+    public <T> void requestPOST(String urlPath, Object data, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Type typeOfT, String useToken) {
         Gson gson = new Gson();
-        GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, BASE_URL + urlPath, gson.toJson(data), responseListener, errorListener, classOfT, useToken);
+        GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, BASE_URL + urlPath, gson.toJson(data), responseListener, errorListener, typeOfT, useToken);
         _queue.add(req);
     }
 
@@ -110,6 +113,10 @@ public class ApiCommuncation {
 
     public void sendEvent(EventApiModel event, Response.Listener<EventResultModel> responseListener, Response.ErrorListener errorListener) {
         requestPOST("events", event, responseListener, errorListener, EventResultModel.class, getAPIToken());
+    }
+
+    public void getEventGroups(Response.Listener<List<EventGroupApiModel>> responseListener, Response.ErrorListener errorListener) {
+        requestGET("event-groups", responseListener, errorListener, TypeTokenHelper.getEventGroupsListType(), getAPIToken());
     }
 
 }

@@ -6,9 +6,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 
 public class TypeTokenHelper {
     public static Type getCellListType() {
         return new TypeToken<ArrayList<CellInfoApiModel>>(){}.getType();
+    }
+
+    public static Type getEventGroupsListType() {
+        return new TypeToken<ArrayList<EventGroupApiModel>>(){}.getType();
     }
 }

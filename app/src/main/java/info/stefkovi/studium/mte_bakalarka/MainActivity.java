@@ -9,11 +9,13 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -32,12 +36,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.listeners.EventQueueUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventQueueInfo;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private BackgroundWorkerService _bwService;
     private long _currentEventId;
     private EventQueue _eventQueue;
+    private List<String> eventGroupsSpinnerData;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
@@ -157,6 +166,29 @@ public class MainActivity extends AppCompatActivity {
     private void enableActivityActions() {
 
         Intent serviceIntent = new Intent(this, BackgroundWorkerService.class);
+
+        ApiCommuncation api = new ApiCommuncation(getApplicationContext());
+
+        eventGroupsSpinnerData = new ArrayList<>();
+        ArrayAdapter<String> eventGroupsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.view_spinner_item, eventGroupsSpinnerData);
+        Spinner spEventGroup = (Spinner) findViewById(R.id.spEventGroup);
+        spEventGroup.setAdapter(eventGroupsAdapter);
+        api.getEventGroups(new Response.Listener<List<EventGroupApiModel>>() {
+            @Override
+            public void onResponse(List<EventGroupApiModel> response) {
+                List<String> eventGroupsList = response.stream().map(eventGroupApiModel -> eventGroupApiModel.name).collect(Collectors.toList());
+                eventGroupsAdapter.clear();
+                eventGroupsAdapter.addAll(eventGroupsList);
+                eventGroupsAdapter.notifyDataSetChanged();
+                spEventGroup.invalidate();
+                spEventGroup.setSelection(0);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
 
         _eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
             @Override
