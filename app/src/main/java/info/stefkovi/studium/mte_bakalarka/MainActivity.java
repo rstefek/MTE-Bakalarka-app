@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private BackgroundWorkerService bwService;
     private long currentEventId;
     private EventQueue eventQueue;
-    private List<String> eventGroupsSpinnerData;
+    private List<EventGroupApiModel> eventGroupsData;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
                 //TODO: kontrola zda se aktivita má rozjet
@@ -151,6 +152,20 @@ public class MainActivity extends AppCompatActivity {
                     updateEventQueue();
                 }
             });
+
+            Spinner spEventGroup = (Spinner) findViewById(R.id.spEventGroup);
+            bwService.setEventGroupId(eventGroupsData.get(spEventGroup.getSelectedItemPosition()).id);
+            spEventGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    bwService.setEventGroupId(eventGroupsData.get(position).id);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
 
         @Override
@@ -169,16 +184,15 @@ public class MainActivity extends AppCompatActivity {
 
         ApiCommuncation api = new ApiCommuncation(getApplicationContext());
 
-        eventGroupsSpinnerData = new ArrayList<>();
-        ArrayAdapter<String> eventGroupsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.view_spinner_item, eventGroupsSpinnerData);
+        ArrayAdapter<String> eventGroupsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.view_spinner_item, new ArrayList<>());
         Spinner spEventGroup = (Spinner) findViewById(R.id.spEventGroup);
         spEventGroup.setAdapter(eventGroupsAdapter);
         api.getEventGroups(new Response.Listener<List<EventGroupApiModel>>() {
             @Override
             public void onResponse(List<EventGroupApiModel> response) {
-                List<String> eventGroupsList = response.stream().map(eventGroupApiModel -> eventGroupApiModel.name).collect(Collectors.toList());
+                eventGroupsData = response;
                 eventGroupsAdapter.clear();
-                eventGroupsAdapter.addAll(eventGroupsList);
+                eventGroupsAdapter.addAll(eventGroupsData.stream().map(eventGroupApiModel -> eventGroupApiModel.name).collect(Collectors.toList()));
                 eventGroupsAdapter.notifyDataSetChanged();
                 spEventGroup.invalidate();
                 spEventGroup.setSelection(0);
@@ -220,14 +234,12 @@ public class MainActivity extends AppCompatActivity {
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
                     startForegroundService(serviceIntent);
-                    //_bwService.start();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
 
                     unbindService(serviceConnection);
 
                     stopService(serviceIntent);
-                    //_bwService.stop();
                 }
             }
         });
@@ -258,6 +270,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        ImageButton btnPositionList = (ImageButton) findViewById(R.id.ibPositionList);
+        btnPositionList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), PositionListActivity.class);
                 startActivity(i);
             }
         });

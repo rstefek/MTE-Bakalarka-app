@@ -33,6 +33,10 @@ public class BackgroundWorkerService extends Service {
         }
     }
 
+    public void setEventGroupId(int eventGroupId) {
+        this.eventGroupId = eventGroupId;
+    }
+
     private void setupInternalServices() {
         if(teleService == null) {
             teleService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
@@ -47,7 +51,7 @@ public class BackgroundWorkerService extends Service {
         @Override
         public void onPositionUpdated(PositionApiModel position) {
             List<CellInfoApiModel> cells = teleService.getAllCellInfo();
-            EventModel event = new EventModel(cells, position);
+            EventModel event = new EventModel(cells, position, eventGroupId);
 
             DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
             event.dbId = db.saveEventData(event);

@@ -10,6 +10,7 @@ public class EventApiModel {
     public int user;
     public List<CellInfoApiModel> cells;
     public PositionApiModel position;
+    public int event_group;
 
     public EventApiModel(EventModel eventModel, int userId) {
         this.uid = eventModel.uid.toString();
@@ -17,6 +18,7 @@ public class EventApiModel {
         this.cells = eventModel.cells;
         this.position = eventModel.position;
         this.user = userId;
+        this.event_group = eventModel.event_group;
     }
 }
 

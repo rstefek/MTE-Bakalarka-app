@@ -41,6 +41,7 @@ public class DatabaseHelper {
         values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION, gson.toJson(event.position));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS, gson.toJson(event.cells));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP, DateTimeFormatter.ISO_DATE_TIME.format(event.happened));
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_EVENT_GROUP_ID, event.event_group);
         return db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
     }
 
@@ -90,6 +91,7 @@ public class DatabaseHelper {
         Cursor c = db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_ID,
                 DatabaseStructureHelper.EVENT_COLUMN_UUID,
+                DatabaseStructureHelper.EVENT_COLUMN_EVENT_GROUP_ID,
                 DatabaseStructureHelper.EVENT_COLUMN_SENT,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION,
@@ -103,6 +105,7 @@ public class DatabaseHelper {
             EventModel event = new EventModel(c.getLong(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_ID)));
             String uid = c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_UUID));
             event.uid = (uid != null ? UUID.fromString(uid) : null);
+            event.event_group = c.getInt(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_EVENT_GROUP_ID));
             event.cells = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS)), TypeTokenHelper.getCellListType());
             event.position = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION)), PositionApiModel.class);
             event.happened = LocalDateTime.parse(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP)), DateTimeFormatter.ISO_DATE_TIME);

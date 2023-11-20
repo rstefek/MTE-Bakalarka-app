@@ -6,13 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseStructureHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String DATABASE_NAME = "event_db";
     public static final String EVENT_TABLE_NAME = "events";
     public static final String EVENT_COLUMN_ID = "_id";
     public static final String EVENT_COLUMN_UUID = "uuid";
     public static final String EVENT_COLUMN_TIMESTAMP = "tstamp";
+    public static final String EVENT_COLUMN_EVENT_GROUP_ID = "event_group_id";
     public static final String EVENT_COLUMN_SENT = "sent";
     public static final String EVENT_COLUMN_DATA_CELLS = "cells";
     public static final String EVENT_COLUMN_DATA_POSITION = "position";
@@ -36,6 +37,11 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
         if(i < 3 && i1 >= 3) {
             sqLiteDatabase.execSQL("ALTER TABLE " + EVENT_TABLE_NAME + " ADD " +
                     EVENT_COLUMN_UUID + " TEXT");
+
+        }
+        if(i < 4 && i1 >= 4) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + EVENT_TABLE_NAME + " ADD " +
+                    EVENT_COLUMN_EVENT_GROUP_ID + " INT UNSIGNED");
 
         }
     }
