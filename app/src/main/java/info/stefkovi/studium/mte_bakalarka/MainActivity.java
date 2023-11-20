@@ -97,6 +97,15 @@ public class MainActivity extends AppCompatActivity {
                             marker.setPosition(latlng);
                         }
                     });
+
+                    TextView tvPositionAngle = (TextView) findViewById(R.id.tvPositionAngle);
+                    tvPositionAngle.setText(String.valueOf(position.bearing));
+
+                    TextView tvPositionSpeed = (TextView) findViewById(R.id.tvPositionSpeed);
+                    tvPositionSpeed.setText(String.valueOf(position.speed));
+
+                    TextView tvPositionAccuracy = (TextView) findViewById(R.id.tvPositionAccuracy);
+                    tvPositionAccuracy.setText(String.valueOf(position.accuracy));
                 }
 
                 @Override
