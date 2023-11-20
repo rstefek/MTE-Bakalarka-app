@@ -53,9 +53,9 @@ import info.stefkovi.studium.mte_bakalarka.services.BackgroundWorkerService;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BackgroundWorkerService _bwService;
-    private long _currentEventId;
-    private EventQueue _eventQueue;
+    private BackgroundWorkerService bwService;
+    private long currentEventId;
+    private EventQueue eventQueue;
     private List<String> eventGroupsSpinnerData;
     private ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGrantedList -> {
@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             BackgroundWorkerService.ServiceBinder binder = (BackgroundWorkerService.ServiceBinder) service;
-            _bwService = binder.getService();
+            bwService = binder.getService();
 
-            _bwService.setUpdatedListener(new BackgroundServiceUpdatedListener() {
+            bwService.setUpdatedListener(new BackgroundServiceUpdatedListener() {
                 @Override
                 public void onPositionUpdated(PositionApiModel position) {
                     MapView mapView = (MapView) findViewById(R.id.mapView);
@@ -85,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
                         LatLng latlng = new LatLng(position.lat, position.lon);
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
                         googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                        Marker marker = _bwService.getPositionService().getMyPositionMarker();
+                        Marker marker = bwService.getPositionService().getMyPositionMarker();
                         if(marker == null) {
                             MarkerOptions markerOptions = new MarkerOptions();
                             markerOptions.position(latlng);
                             marker = googleMap.addMarker(markerOptions);
-                            _bwService.getPositionService().setMyPositionMarker(marker);
+                            bwService.getPositionService().setMyPositionMarker(marker);
                         } else {
                             marker.setPosition(latlng);
                         }
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onEvent(EventModel event) {
-                    _currentEventId = event.dbId;
+                    currentEventId = event.dbId;
 
                     TextView tvLastCellUpdate = (TextView) findViewById(R.id.tvLastCellUpdate);
                     tvLastCellUpdate.setText(event.happened.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
@@ -155,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            _bwService = null;
+            bwService = null;
         }
     };
 
     private void updateEventQueue() {
-        _eventQueue.onEventAdded();
+        eventQueue.onEventAdded();
     }
 
     private void enableActivityActions() {
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        _eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
+        eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
             @Override
             public void onEventsQueueUpdated(EventQueueInfo queue) {
                 //fronta
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        _eventQueue.onEventAdded(); //prvotní načtení
+        eventQueue.onEventAdded(); //prvotní načtení
 
         Switch swActivate = (Switch) findViewById(R.id.swActivate);
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _eventQueue = new EventQueue(getApplicationContext());
+        eventQueue = new EventQueue(getApplicationContext());
 
         boolean accepted = PermissionHelper.AllPermissionsAccepted(this, permissionsWanted);
         if (!accepted) {
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CellListActivity.class);
                 Bundle b = new Bundle();
-                b.putLong("eventId", _currentEventId);
+                b.putLong("eventId", currentEventId);
                 i.putExtras(b);
                 startActivity(i);
             }

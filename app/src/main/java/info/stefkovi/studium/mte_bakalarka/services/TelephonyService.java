@@ -11,8 +11,6 @@ import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
@@ -22,36 +20,17 @@ import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 
 public class TelephonyService {
 
-    private TelephonyManager _manager;
-    private CellInfoListener _cellListener;
-
-    private static class CellInfoListener extends PhoneStateListener {
-        List<CellInfo> cellInfo;
-        @Override
-        public void onCellInfoChanged(List<CellInfo> cellInfo) {
-            this.cellInfo = cellInfo;
-        }
-
-        @Override
-        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-            super.onSignalStrengthsChanged(signalStrength);
-        }
-    }
+    private TelephonyManager manager;
 
     @SuppressLint("MissingPermission")
     public TelephonyService(TelephonyManager manager) {
-        this._manager = manager;
+        this.manager = manager;
         getAllCellInfo();
-
-         /*
-        _cellListener = new CellInfoListener();
-        _manager.listen(_cellListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        */
     }
 
     @SuppressLint("MissingPermission")
     public List<CellInfoApiModel> getAllCellInfo() {
-        List<CellInfo> allCells = _manager.getAllCellInfo();
+        List<CellInfo> allCells = manager.getAllCellInfo();
         List<CellInfoApiModel> apiCells = new ArrayList<>();
 
         for (CellInfo cell : allCells) {

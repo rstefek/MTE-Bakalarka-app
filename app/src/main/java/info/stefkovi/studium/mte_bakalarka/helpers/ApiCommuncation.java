@@ -32,25 +32,25 @@ import info.stefkovi.studium.mte_bakalarka.model.LoginResultApiModel;
 
 public class ApiCommuncation {
     //Volley - knihovna na HTTP, Logger
-    private RequestQueue _queue;
-    private Context _ctx;
+    private RequestQueue queue;
+    private Context ctx;
     private final String BASE_URL = "https://bakalarka.beaverlyhills.eu/";
     private final int CONNECTION_TIMEOUT = 15000;
 
     public ApiCommuncation(Context ctx) {
-        this._ctx = ctx;
-        this._queue = Volley.newRequestQueue(ctx);
+        this.ctx = ctx;
+        this.queue = Volley.newRequestQueue(ctx);
     }
 
     private class GsonRequest<T> extends JsonRequest<T> {
 
-        private Type _typeOfT;
-        private String _useToken;
+        private Type typeOfT;
+        private String useToken;
 
         public GsonRequest(int method, String url, @Nullable String requestBody, Response.Listener<T> listener, @Nullable Response.ErrorListener errorListener, Type typeOfT, String useToken) {
             super(method, url, requestBody, listener, errorListener);
-            _typeOfT = typeOfT;
-            _useToken = useToken;
+            this.typeOfT = typeOfT;
+            this.useToken = useToken;
         }
 
         @Override
@@ -62,8 +62,8 @@ public class ApiCommuncation {
         public Map<String, String> getHeaders() throws AuthFailureError {
             HashMap<String, String> headers = new HashMap<>(super.getHeaders());
             headers.put("Accept", "application/json");
-            if(_useToken != null) {
-                headers.put("Authorization", "Bearer "+_useToken);
+            if(useToken != null) {
+                headers.put("Authorization", "Bearer "+ useToken);
             }
             return headers;
         }
@@ -77,7 +77,7 @@ public class ApiCommuncation {
                                 response.data,
                                 HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
                 return Response.success(
-                        gson.fromJson(jsonString, _typeOfT), HttpHeaderParser.parseCacheHeaders(response));
+                        gson.fromJson(jsonString, typeOfT), HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException e) {
                 return Response.error(new ParseError(e));
             } catch ( JsonSyntaxException je) {
@@ -87,7 +87,7 @@ public class ApiCommuncation {
     }
 
     private String getAPIToken() {
-        SharedPreferencesHelper preferences = new SharedPreferencesHelper(_ctx);
+        SharedPreferencesHelper preferences = new SharedPreferencesHelper(ctx);
         return preferences.readPrefString("jwt");
     }
 
@@ -97,13 +97,13 @@ public class ApiCommuncation {
 
     public <T> void requestGET(String urlPath, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Type typeOfT, String useToken) {
        GsonRequest<T> req = new GsonRequest<T>(Request.Method.GET, BASE_URL + urlPath, null, responseListener, errorListener, typeOfT, useToken);
-       _queue.add(req);
+       queue.add(req);
     }
 
     public <T> void requestPOST(String urlPath, Object data, Response.Listener<T> responseListener, Response.ErrorListener errorListener, Type typeOfT, String useToken) {
         Gson gson = new Gson();
         GsonRequest<T> req = new GsonRequest<T>(Request.Method.POST, BASE_URL + urlPath, gson.toJson(data), responseListener, errorListener, typeOfT, useToken);
-        _queue.add(req);
+        queue.add(req);
     }
 
     public void login(String user, String pwd, Response.Listener<LoginResultApiModel> responseListener, Response.ErrorListener errorListener) {

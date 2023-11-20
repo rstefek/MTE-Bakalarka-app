@@ -22,9 +22,9 @@ import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class BackgroundWorkerService extends Service {
-    private TelephonyService _teleService;
-    private PositionService _posService;
-
+    private TelephonyService teleService;
+    private PositionService posService;
+    private int eventGroupId;
     private BackgroundServiceUpdatedListener serviceUpdatedListener;
 
     public class ServiceBinder extends Binder {
@@ -34,19 +34,19 @@ public class BackgroundWorkerService extends Service {
     }
 
     private void setupInternalServices() {
-        if(_teleService == null) {
-            _teleService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
+        if(teleService == null) {
+            teleService = new TelephonyService((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         }
-        if(_posService == null) {
-            _posService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-            _posService.setPositionUpdatedListener(positionUpdatedListener);
+        if(posService == null) {
+            posService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+            posService.setPositionUpdatedListener(positionUpdatedListener);
         }
     }
 
     private final PositionUpdatedListener positionUpdatedListener = new PositionUpdatedListener() {
         @Override
         public void onPositionUpdated(PositionApiModel position) {
-            List<CellInfoApiModel> cells = _teleService.getAllCellInfo();
+            List<CellInfoApiModel> cells = teleService.getAllCellInfo();
             EventModel event = new EventModel(cells, position);
 
             DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
@@ -65,11 +65,11 @@ public class BackgroundWorkerService extends Service {
     }
 
     public TelephonyService getTelephonyService() {
-        return _teleService;
+        return teleService;
     }
 
     public PositionService getPositionService() {
-        return _posService;
+        return posService;
     }
 
     private final IBinder iBinder = new ServiceBinder();
@@ -92,7 +92,7 @@ public class BackgroundWorkerService extends Service {
 
     @Override
     public void onDestroy() {
-        _posService.deactivateGathering();
+        posService.deactivateGathering();
         super.onDestroy();
     }
 
@@ -101,7 +101,7 @@ public class BackgroundWorkerService extends Service {
         createNotificationChannel();
         startForeground(startId, new Notification.Builder(getApplicationContext(), CHANNEL_ID).setContentTitle(getString(R.string.BgChannelName)).setContentText(getString(R.string.BgChannelDesc)).build());
         setupInternalServices();
-        _posService.activateGathering();
+        posService.activateGathering();
         return START_STICKY;
     }
 }

@@ -22,14 +22,14 @@ public class EventQueue {
     private EventQueueUpdatedListener updatedListener;
     private final int QUEUE_LENGTH = 15;
     private HashMap<UUID, EventModel> eventsToProcess;
-    private Context _ctx;
+    private Context ctx;
     private long numInDb;
     public EventQueue(Context ctx) {
         eventsToProcess = new HashMap<>();
-        _ctx = ctx;
+        this.ctx = ctx;
     }
     public void onEventAdded() {
-        DatabaseHelper db = DatabaseHelper.getInstance(_ctx);
+        DatabaseHelper db = DatabaseHelper.getInstance(ctx);
         numInDb = db.getUnsentEventsCount();
 
         if(eventsToProcess.size() == 0 && numInDb >= QUEUE_LENGTH) {
@@ -39,13 +39,13 @@ public class EventQueue {
         runUpdatedListener();
     }
     public void sendEventsBulk() {
-        DatabaseHelper db = DatabaseHelper.getInstance(_ctx);
+        DatabaseHelper db = DatabaseHelper.getInstance(ctx);
         eventsToProcess = (HashMap<UUID, EventModel>) db.getEventsToSend(0).stream().collect(Collectors.toMap(eventModel -> eventModel.uid, eventModel -> eventModel));
         sendEvents();
     }
     private void sendEvents() {
-        ApiCommuncation api = new ApiCommuncation(_ctx);
-        DatabaseHelper db = DatabaseHelper.getInstance(_ctx);
+        ApiCommuncation api = new ApiCommuncation(ctx);
+        DatabaseHelper db = DatabaseHelper.getInstance(ctx);
 
         for ( UUID eventUid: eventsToProcess.keySet()) {
             EventModel event = eventsToProcess.get(eventUid);

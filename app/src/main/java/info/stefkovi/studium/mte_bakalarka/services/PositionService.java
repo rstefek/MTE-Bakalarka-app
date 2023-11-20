@@ -14,23 +14,23 @@ import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class PositionService implements LocationListener {
 
-    private LocationManager _manager;
-    private Location _currentLocation;
+    private LocationManager manager;
+    private Location currentLocation;
     private PositionUpdatedListener positionUpdatedListener;
 
     private Marker myPositionMarker = null;
 
     public PositionService(LocationManager manager) {
-        this._manager = manager;
+        this.manager = manager;
     }
 
     @SuppressLint("MissingPermission")
     public void activateGathering() {
-        _manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10000, 0, this);
+        manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10000, 0, this);
     }
 
     public void deactivateGathering() {
-        _manager.removeUpdates(this);
+        manager.removeUpdates(this);
     }
 
     public Marker getMyPositionMarker() {
@@ -41,7 +41,7 @@ public class PositionService implements LocationListener {
         this.myPositionMarker = myPositionMarker;
     }
     public PositionApiModel getCurrentPosition() {
-        return convertLocation(_currentLocation);
+        return convertLocation(currentLocation);
     }
 
     private PositionApiModel convertLocation(Location location) {
@@ -64,7 +64,7 @@ public class PositionService implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        _currentLocation = location;
+        currentLocation = location;
         if(positionUpdatedListener != null) {
             positionUpdatedListener.onPositionUpdated(convertLocation(location));
         }
