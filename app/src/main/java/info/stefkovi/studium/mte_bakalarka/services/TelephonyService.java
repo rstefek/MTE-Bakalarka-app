@@ -20,6 +20,10 @@ import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
 
 public class TelephonyService {
 
+    private static final String NTWRK_TYPE_2G = "G2";
+    private static final String NTWRK_TYPE_3G = "G3";
+    private static final String NTWRK_TYPE_4G = "G4";
+    private static final String NTWRK_TYPE_5G = "G5";
     private TelephonyManager manager;
 
     @SuppressLint("MissingPermission")
@@ -43,6 +47,7 @@ public class TelephonyService {
 
                 apiCell.registered = cellGsm.isRegistered();
                 apiCell.connection_status = cellGsm.getCellConnectionStatus();
+                apiCell.network_type = NTWRK_TYPE_2G;
 
                 //Identita
                 apiCell.identity.mnc = identityGsm.getMncString();
@@ -64,6 +69,7 @@ public class TelephonyService {
 
                 apiCell.registered = cellLte.isRegistered();
                 apiCell.connection_status = cellLte.getCellConnectionStatus();
+                apiCell.network_type = NTWRK_TYPE_4G;
 
                 //Identita
                 apiCell.identity.mnc = identityLte.getMncString();
@@ -90,6 +96,7 @@ public class TelephonyService {
 
                 apiCell.registered = cellWCdma.isRegistered();
                 apiCell.connection_status = cellWCdma.getCellConnectionStatus();
+                apiCell.network_type = NTWRK_TYPE_3G;
 
                 //Identita
                 apiCell.identity.mnc = identityWCdma.getMncString();

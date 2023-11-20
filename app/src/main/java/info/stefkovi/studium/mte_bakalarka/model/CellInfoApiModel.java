@@ -5,6 +5,7 @@ public class CellInfoApiModel {
     public CellSignalStrengthApiModel signal;
     public boolean registered;
     public int connection_status;
+    public String network_type;
 
     public CellInfoApiModel() {
         identity = new CellIdentityApiModel();

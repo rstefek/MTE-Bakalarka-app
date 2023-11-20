@@ -19,6 +19,10 @@ public class EventApiModel {
         this.position = eventModel.position;
         this.user = userId;
         this.event_group = eventModel.event_group;
+        CellInfoApiModel regCell = eventModel.cells.stream().filter(cellInfoApiModel -> cellInfoApiModel.registered == true).findFirst().get();
+        if(regCell != null) {
+            this.network_type = regCell.network_type;
+        }
     }
 }
 
