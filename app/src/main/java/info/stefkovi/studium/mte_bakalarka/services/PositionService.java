@@ -14,6 +14,7 @@ import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class PositionService implements LocationListener {
 
+    private long minTime = 10000;
     private LocationManager manager;
     private Location currentLocation;
     private PositionUpdatedListener positionUpdatedListener;
@@ -26,7 +27,7 @@ public class PositionService implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public void activateGathering() {
-        manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10000, 0, this);
+        manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, minTime, 0, this);
     }
 
     public void deactivateGathering() {
@@ -60,6 +61,10 @@ public class PositionService implements LocationListener {
 
     public void setPositionUpdatedListener(PositionUpdatedListener listener) {
         positionUpdatedListener = listener;
+    }
+
+    public void setMinTime(long minTime) {
+        this.minTime = minTime;
     }
 
     @Override

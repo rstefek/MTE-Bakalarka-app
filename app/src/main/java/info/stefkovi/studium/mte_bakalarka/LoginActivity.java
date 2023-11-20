@@ -1,13 +1,13 @@
 package info.stefkovi.studium.mte_bakalarka;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
-        String token = preferences.readPrefString("jwt");
+        String token = preferences.readPrefString(SharedPreferencesHelper.PREF_JWT);
 
         boolean expired = token.isEmpty() || JwtHelper.isTokenExpired(token);
         if(expired) {
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                     api.login(loginName.getText().toString(), loginPassword.getText().toString(), new Response.Listener<LoginResultApiModel>() {
                         @Override
                         public void onResponse(LoginResultApiModel response) {
-                            preferences.savePrefString("jwt", response.jwt);
+                            preferences.savePrefString(SharedPreferencesHelper.PREF_JWT, response.jwt);
 
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);

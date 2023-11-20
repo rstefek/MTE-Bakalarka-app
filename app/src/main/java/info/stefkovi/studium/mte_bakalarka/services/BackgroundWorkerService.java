@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 
 import java.util.List;
 
 import info.stefkovi.studium.mte_bakalarka.R;
 import info.stefkovi.studium.mte_bakalarka.helpers.DatabaseHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.listeners.PositionUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
@@ -26,6 +28,7 @@ public class BackgroundWorkerService extends Service {
     private PositionService posService;
     private int eventGroupId;
     private BackgroundServiceUpdatedListener serviceUpdatedListener;
+    private PowerManager.WakeLock wakeLock;
 
     public class ServiceBinder extends Binder {
         public BackgroundWorkerService getService() {
@@ -44,6 +47,16 @@ public class BackgroundWorkerService extends Service {
         if(posService == null) {
             posService = new PositionService((LocationManager) getSystemService(Context.LOCATION_SERVICE));
             posService.setPositionUpdatedListener(positionUpdatedListener);
+
+            SharedPreferencesHelper preferencesHelper = new SharedPreferencesHelper(getApplicationContext());
+            String interval = preferencesHelper.readPrefString(SharedPreferencesHelper.PREF_GATHER_INTERVAL);
+            if(!interval.isEmpty()) {
+                posService.setMinTime(Long.valueOf(interval)*1000);
+            }
+        }
+        if(wakeLock == null) {
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, CHANNEL_ID+":WakeLock");
         }
     }
 
@@ -96,6 +109,7 @@ public class BackgroundWorkerService extends Service {
 
     @Override
     public void onDestroy() {
+        wakeLock.release();
         posService.deactivateGathering();
         super.onDestroy();
     }
@@ -106,6 +120,7 @@ public class BackgroundWorkerService extends Service {
         startForeground(startId, new Notification.Builder(getApplicationContext(), CHANNEL_ID).setContentTitle(getString(R.string.BgChannelName)).setContentText(getString(R.string.BgChannelDesc)).build());
         setupInternalServices();
         posService.activateGathering();
+        wakeLock.acquire();
         return START_STICKY;
     }
 }

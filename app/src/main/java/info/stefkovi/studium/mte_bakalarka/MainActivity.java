@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.FOREGROUND_SERVICE
+        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.WAKE_LOCK
     };
 
     private ServiceConnection serviceConnection = new ServiceConnection() {

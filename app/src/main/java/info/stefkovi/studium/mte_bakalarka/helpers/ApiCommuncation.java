@@ -88,7 +88,7 @@ public class ApiCommuncation {
 
     private String getAPIToken() {
         SharedPreferencesHelper preferences = new SharedPreferencesHelper(ctx);
-        return preferences.readPrefString("jwt");
+        return preferences.readPrefString(SharedPreferencesHelper.PREF_JWT);
     }
 
     public int getAPIUserId() {

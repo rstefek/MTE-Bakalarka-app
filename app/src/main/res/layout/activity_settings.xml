@@ -7,6 +7,17 @@
     tools:context=".SettingsActivity">
 
     <TextView
+        android:id="@+id/tlSettingGather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/SettingsHeaderGather"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/tlSettingDatabase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +26,9 @@
         android:text="@string/SettingsHeaderDatabase"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/etGatherNumsec" />
+
+
 
     <TextView
         android:id="@+id/tlSettingCopyright"
@@ -27,6 +40,16 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bDeleteNonSent" />
+
+    <Button
+        android:id="@+id/bSaveGather"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/SettingsSave"
+        app:layout_constraintBottom_toBottomOf="@+id/tlGatherNumDesc"
+        app:layout_constraintStart_toEndOf="@+id/tlGatherNumDesc"
+        app:layout_constraintTop_toTopOf="@+id/tlGatherNumDesc" />
 
     <Button
         android:id="@+id/bDeleteProcessed"
@@ -57,4 +80,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tlSettingCopyright"
         app:layout_constraintTop_toBottomOf="@+id/tlSettingCopyright" />
+
+    <EditText
+        android:id="@+id/etGatherNumsec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:inputType="number"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="@+id/tlSettingGather"
+        app:layout_constraintTop_toBottomOf="@+id/tlSettingGather" />
+
+    <TextView
+        android:id="@+id/tlGatherNumDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/SettingsGatherNum"
+        app:layout_constraintBottom_toBottomOf="@+id/etGatherNumsec"
+        app:layout_constraintStart_toEndOf="@+id/etGatherNumsec"
+        app:layout_constraintTop_toTopOf="@+id/etGatherNumsec" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

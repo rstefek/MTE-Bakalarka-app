@@ -10,6 +10,8 @@ import info.stefkovi.studium.mte_bakalarka.R;
 public class SharedPreferencesHelper {
 
     private SharedPreferences sharedPrefs;
+    public static final String PREF_JWT = "jwt";
+    public static final String PREF_GATHER_INTERVAL = "gathering_interval_sec";
 
     public SharedPreferencesHelper(Context ctx) {
         sharedPrefs = ctx.getSharedPreferences(ctx.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
