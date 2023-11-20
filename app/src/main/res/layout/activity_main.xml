@@ -152,6 +152,25 @@
             app:layout_constraintStart_toStartOf="@+id/tvCellSignal"
             app:layout_constraintTop_toTopOf="@+id/tvCellSignal" />
 
+        <TextView
+            android:id="@+id/tvCellSignalAsu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/CellListTopSignalAsu"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvCellSignal"
+            app:layout_constraintTop_toBottomOf="@+id/tvCellSignal" />
+
+        <TextView
+            android:id="@+id/tvCellSignalAsuValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            app:layout_constraintStart_toStartOf="@+id/tvCellSignalAsu"
+            app:layout_constraintTop_toTopOf="@+id/tvCellSignalAsu" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -146,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
 
                         TextView tvCellSignalValue = (TextView) findViewById(R.id.tvCellSignalValue);
                         tvCellSignalValue.setText(String.valueOf(connectedCell.signal.signal_dbm));
+
+                        TextView tvCellSignalAsuValue = (TextView) findViewById(R.id.tvCellSignalAsuValue);
+                        tvCellSignalAsuValue.setText(String.valueOf(connectedCell.signal.signal_asu));
                     }
                     catch (Exception e) {
 
