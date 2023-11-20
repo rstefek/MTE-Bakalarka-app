@@ -18,19 +18,19 @@ import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
 public class DatabaseHelper {
-    private SQLiteDatabase _db;
-    private static DatabaseHelper _instance = null;
+    private SQLiteDatabase db;
+    private static DatabaseHelper instance = null;
 
     public static synchronized DatabaseHelper getInstance(Context ctx)
     {
-        if (_instance == null)
-            _instance = new DatabaseHelper(ctx);
+        if (instance == null)
+            instance = new DatabaseHelper(ctx);
 
-        return _instance;
+        return instance;
     }
 
     private DatabaseHelper(Context ctx) {
-        _db = new DatabaseStructureHelper(ctx).getWritableDatabase();
+        db = new DatabaseStructureHelper(ctx).getWritableDatabase();
     }
 
     public long saveEventData(EventModel event) {
@@ -41,12 +41,12 @@ public class DatabaseHelper {
         values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION, gson.toJson(event.position));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS, gson.toJson(event.cells));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP, DateTimeFormatter.ISO_DATE_TIME.format(event.happened));
-        return _db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
+        return db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
     }
 
     public long getUnsentEventsCount() {
         //název tabulky ani sloupce nejde dát jako parametr!!!
-        Cursor c = _db.rawQuery("SELECT COUNT("+DatabaseStructureHelper.EVENT_COLUMN_ID+") AS CNT FROM "+DatabaseStructureHelper.EVENT_TABLE_NAME+" WHERE SENT = 0", null);
+        Cursor c = db.rawQuery("SELECT COUNT("+DatabaseStructureHelper.EVENT_COLUMN_ID+") AS CNT FROM "+DatabaseStructureHelper.EVENT_TABLE_NAME+" WHERE SENT = 0", null);
         if(c.moveToFirst()) {
             return c.getLong(0);
         } else {
@@ -55,7 +55,7 @@ public class DatabaseHelper {
     }
 
     public ArrayList<CellInfoApiModel> getEventDataCells(long eventId) {
-        Cursor c = _db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
+        Cursor c = db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS
         }, DatabaseStructureHelper.EVENT_COLUMN_ID + " = ?", new String[]{
                 String.valueOf(eventId)
@@ -72,7 +72,7 @@ public class DatabaseHelper {
     public long markEventAsSend(UUID eventUid) {
         ContentValues values = new ContentValues();
         values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, 1);
-        return _db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_UUID + " = ?", new String[]{
+        return db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_UUID + " = ?", new String[]{
                 String.valueOf(eventUid)
         });
     }
@@ -87,7 +87,7 @@ public class DatabaseHelper {
     }
 
     private ArrayList<EventModel> getEvents(String where, String[] whereArgs, String orderBy) {
-        Cursor c = _db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
+        Cursor c = db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_ID,
                 DatabaseStructureHelper.EVENT_COLUMN_UUID,
                 DatabaseStructureHelper.EVENT_COLUMN_SENT,
@@ -122,7 +122,7 @@ public class DatabaseHelper {
     }
 
     private int deleteSpecificEvents(String where, String[] whereArgs) {
-        return _db.delete(DatabaseStructureHelper.EVENT_TABLE_NAME, where, whereArgs);
+        return db.delete(DatabaseStructureHelper.EVENT_TABLE_NAME, where, whereArgs);
     }
 
 
