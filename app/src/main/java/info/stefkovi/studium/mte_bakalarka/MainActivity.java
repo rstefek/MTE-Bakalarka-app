@@ -32,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.time.format.DateTimeFormatter;
@@ -88,15 +87,11 @@ public class MainActivity extends AppCompatActivity {
                         LatLng latlng = new LatLng(position.lat, position.lon);
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
                         googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                        Marker marker = bwService.getPositionService().getMyPositionMarker();
-                        if(marker == null) {
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(latlng);
-                            marker = googleMap.addMarker(markerOptions);
-                            bwService.getPositionService().setMyPositionMarker(marker);
-                        } else {
-                            marker.setPosition(latlng);
-                        }
+
+                        googleMap.clear();
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latlng);
+                        googleMap.addMarker(markerOptions);
                     });
 
                     TextView tvPositionAngle = (TextView) findViewById(R.id.tvPositionAngle);

@@ -81,14 +81,6 @@ public class BackgroundWorkerService extends Service {
         serviceUpdatedListener = listener;
     }
 
-    public TelephonyService getTelephonyService() {
-        return teleService;
-    }
-
-    public PositionService getPositionService() {
-        return posService;
-    }
-
     private final IBinder iBinder = new ServiceBinder();
     @Override
     public IBinder onBind(Intent intent) {

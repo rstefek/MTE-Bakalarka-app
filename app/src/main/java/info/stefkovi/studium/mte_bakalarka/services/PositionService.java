@@ -7,8 +7,6 @@ import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.model.Marker;
-
 import info.stefkovi.studium.mte_bakalarka.listeners.PositionUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.PositionApiModel;
 
@@ -18,8 +16,6 @@ public class PositionService implements LocationListener {
     private LocationManager manager;
     private Location currentLocation;
     private PositionUpdatedListener positionUpdatedListener;
-
-    private Marker myPositionMarker = null;
 
     public PositionService(LocationManager manager) {
         this.manager = manager;
@@ -32,17 +28,6 @@ public class PositionService implements LocationListener {
 
     public void deactivateGathering() {
         manager.removeUpdates(this);
-    }
-
-    public Marker getMyPositionMarker() {
-        return myPositionMarker;
-    }
-
-    public void setMyPositionMarker(Marker myPositionMarker) {
-        this.myPositionMarker = myPositionMarker;
-    }
-    public PositionApiModel getCurrentPosition() {
-        return convertLocation(currentLocation);
     }
 
     private PositionApiModel convertLocation(Location location) {
