@@ -39,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
@@ -110,8 +111,10 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCellsUpdated(List<CellInfoApiModel> cells) {
-                    try {
-                        CellInfoApiModel connectedCell = cells.stream().filter(cell -> cell.registered == true).findFirst().get();
+
+                    Optional<CellInfoApiModel> connectedCellOpt = cells.stream().filter(cell -> cell.registered == true).findFirst();
+                    if(connectedCellOpt.isPresent()) {
+                        CellInfoApiModel connectedCell = connectedCellOpt.get();
 
                         ImageView ivSignal = (ImageView) findViewById(R.id.ivSignalStrength);
                         switch (connectedCell.signal.level) {
@@ -149,9 +152,10 @@ public class MainActivity extends AppCompatActivity {
 
                         TextView tvCellSignalAsuValue = (TextView) findViewById(R.id.tvCellSignalAsuValue);
                         tvCellSignalAsuValue.setText(String.valueOf(connectedCell.signal.signal_asu));
-                    }
-                    catch (Exception e) {
 
+                    } else {
+                        ImageView ivSignal = (ImageView) findViewById(R.id.ivSignalStrength);
+                        ivSignal.setImageDrawable(getDrawable(R.drawable.singal_disconnected));
                     }
                 }
 
