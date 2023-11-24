@@ -26,6 +26,7 @@
     <string name="SettingsGatherNum">Interval sběru dat (sekundy)</string>
     <string name="SettingsSave">Uložit</string>
     <string name="SettingsSaveConfirm">Nastavení uloženo!</string>
+    <string name="PositionsFilter">Vykresli</string>
     <string name="BgChannelName">Sledování polohy na pozadí</string>
     <string name="BgChannelDesc">Aplikace sleduje na pozadí polohu zařízení, pokud je aplikace nastavena do módu "Aktivuj sběr"</string>
 </resources>

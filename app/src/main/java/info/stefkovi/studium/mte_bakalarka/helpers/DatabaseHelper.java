@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -87,6 +88,10 @@ public class DatabaseHelper {
         return getEvents(null, null, DatabaseStructureHelper.EVENT_COLUMN_ID + " DESC");
     }
 
+    public ArrayList<EventModel> getAllEventsByDate(LocalDate dt) {
+        return getEvents("date("+DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP + ") = date(?)", new String[]{ dt.format(DateTimeFormatter.ISO_DATE)}, DatabaseStructureHelper.EVENT_COLUMN_ID + " DESC");
+    }
+
     private ArrayList<EventModel> getEvents(String where, String[] whereArgs, String orderBy) {
         Cursor c = db.query(DatabaseStructureHelper.EVENT_TABLE_NAME, new String[]{
                 DatabaseStructureHelper.EVENT_COLUMN_ID,
@@ -112,6 +117,7 @@ public class DatabaseHelper {
             event.sent = c.getInt(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_SENT));
             events.add(event);
         }
+        c.close();
 
         return events;
     }
