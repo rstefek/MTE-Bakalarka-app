@@ -27,7 +27,7 @@ public class PositionService implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public void activateGathering() {
-        manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, minTime, 0, this);
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, this);
     }
 
     public void deactivateGathering() {
