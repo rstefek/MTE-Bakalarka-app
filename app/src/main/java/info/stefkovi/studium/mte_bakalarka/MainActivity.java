@@ -166,7 +166,9 @@ public class MainActivity extends AppCompatActivity {
             });
 
             Spinner spEventGroup = (Spinner) findViewById(R.id.spEventGroup);
-            bwService.setEventGroupId(eventGroupsData.get(spEventGroup.getSelectedItemPosition()).id);
+            if(eventGroupsData != null) {
+                bwService.setEventGroupId(eventGroupsData.get(spEventGroup.getSelectedItemPosition()).id);
+            }
             spEventGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
@@ -58,5 +59,20 @@ public class PositionService implements LocationListener {
         if(positionUpdatedListener != null) {
             positionUpdatedListener.onPositionUpdated(convertLocation(location));
         }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
     }
 }
