@@ -1,10 +1,11 @@
 plugins {
     id("com.android.application")
+    id("io.sentry.android.gradle") version "3.14.0"
 }
 
 android {
     namespace = "info.stefkovi.studium.mte_bakalarka"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "info.stefkovi.studium.mte_bakalarka"
@@ -33,9 +34,9 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.auth0.android:jwtdecode:2.0.2")
