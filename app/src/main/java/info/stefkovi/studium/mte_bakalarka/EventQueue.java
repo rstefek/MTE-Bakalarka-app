@@ -52,7 +52,7 @@ public class EventQueue {
             api.sendEvent(new EventApiModel(event, api.getAPIUserId()), new Response.Listener<EventResultModel>() {
                 @Override
                 public void onResponse(EventResultModel response) {
-                    db.markEventAsSend(response.uid);
+                    db.markEventSentStatus(response.uid, 1);
                     eventsToProcess.remove(response.uid);
                     runUpdatedListener();
                 }
@@ -62,6 +62,7 @@ public class EventQueue {
                     if(error.networkResponse != null) {
                         Log.e("API", error.networkResponse.toString(), error);
                     }
+                    db.markEventSentStatus(eventUid, 2);
                     eventsToProcess.remove(eventUid);
                     runUpdatedListener();
                 }

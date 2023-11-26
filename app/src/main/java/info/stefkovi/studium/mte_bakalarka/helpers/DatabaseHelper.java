@@ -71,9 +71,9 @@ public class DatabaseHelper {
         }
     }
 
-    public long markEventAsSend(UUID eventUid) {
+    public long markEventSentStatus(UUID eventUid, int status) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, 1);
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, status);
         return db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_UUID + " = ?", new String[]{
                 String.valueOf(eventUid)
         });
@@ -126,8 +126,8 @@ public class DatabaseHelper {
         return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 1", null);
     }
 
-    public int deleteNotSent() {
-        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null);
+    public int deleteErrorneous() {
+        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 2", null);
     }
 
     private int deleteSpecificEvents(String where, String[] whereArgs) {

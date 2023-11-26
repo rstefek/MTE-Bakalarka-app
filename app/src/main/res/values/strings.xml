@@ -19,7 +19,7 @@
     <string name="SettingsHeaderGather">Nastavení sběru dat</string>
     <string name="SettingsHeaderDatabase">Údržba databáze</string>
     <string name="SettingsButtonClearProcessed">Vymazat zpracované záznamy</string>
-    <string name="SettingsButtonClearNotSent">Vymazat neposlané záznamy</string>
+    <string name="SettingsButtonClearNotSent">Vymazat chybové záznamy</string>
     <string name="SettingsHeaderCopyright">Copyright a licence</string>
     <string name="SettingsCopyrightLicence">©2023 Roman Štefek (STE0516)</string>
     <string name="SettingsDatabaseConfirm">Údržba provedena!</string>

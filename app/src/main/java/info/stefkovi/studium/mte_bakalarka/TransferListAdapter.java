@@ -83,6 +83,9 @@ public class TransferListAdapter extends RecyclerView.Adapter<TransferListAdapte
 
         viewHolder.getTextViewEventDate().setText(String.valueOf(event.happened.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))));
         switch (event.sent) {
+            case 2:
+                viewHolder.getTextViewEventState().setBackgroundColor(Color.RED);
+                break;
             case 1:
                 viewHolder.getTextViewEventState().setBackgroundColor(Color.GREEN);
                 break;

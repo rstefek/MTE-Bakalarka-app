@@ -55,7 +55,7 @@ public class ApiCommuncation {
 
         @Override
         public RetryPolicy getRetryPolicy() {
-            return new DefaultRetryPolicy(CONNECTION_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            return new DefaultRetryPolicy(CONNECTION_TIMEOUT, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         }
 
         @Override
