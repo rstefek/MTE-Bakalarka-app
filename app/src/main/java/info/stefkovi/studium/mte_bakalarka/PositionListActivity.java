@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,6 +56,7 @@ public class PositionListActivity extends AppCompatActivity {
                                 LatLng pos = new LatLng(event.position.lat, event.position.lon);
                                 MarkerOptions markerOptions = new MarkerOptions();
                                 markerOptions.position(pos);
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.location_pin));
                                 boundsBuilder.include(pos);
                                 googleMap.addMarker(markerOptions);
                             }

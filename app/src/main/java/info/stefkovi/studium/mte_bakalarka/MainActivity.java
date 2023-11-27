@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -91,17 +92,18 @@ public class MainActivity extends AppCompatActivity {
                         googleMap.clear();
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(latlng);
+                        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.location_pin));
                         googleMap.addMarker(markerOptions);
                     });
 
                     TextView tvPositionAngle = (TextView) findViewById(R.id.tvPositionAngle);
-                    tvPositionAngle.setText(String.valueOf(position.bearing));
+                    tvPositionAngle.setText((int) Math.floor(position.bearing) + getString(R.string.MapUnitBearing));
 
                     TextView tvPositionSpeed = (TextView) findViewById(R.id.tvPositionSpeed);
-                    tvPositionSpeed.setText(String.valueOf(position.speed));
+                    tvPositionSpeed.setText((int) Math.floor(position.speed * 3.6) + getString(R.string.MapUnitSpeed));
 
                     TextView tvPositionAccuracy = (TextView) findViewById(R.id.tvPositionAccuracy);
-                    tvPositionAccuracy.setText(String.valueOf(position.accuracy));
+                    tvPositionAccuracy.setText((int) Math.floor(position.accuracy) + getString(R.string.MapUnitAccuracy));
                 }
 
                 @Override

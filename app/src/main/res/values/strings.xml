@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">MTE-Bakalarka-app</string>
     <string name="Queue">Fronta v databázi</string>
+    <string name="MapUnitBearing">°</string>
+    <string name="MapUnitSpeed"> km/h</string>
+    <string name="MapUnitAccuracy"> m</string>
     <string name="ButtonGetCellsText">Proveď zjištění buňek</string>
     <string name="ButtonDetailText">Detail</string>
     <string name="ButtonSendText">Odeslat data na API</string>
