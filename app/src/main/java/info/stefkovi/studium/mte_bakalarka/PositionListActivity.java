@@ -43,23 +43,25 @@ public class PositionListActivity extends AppCompatActivity {
         bFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mapViewHistory.getMapAsync(googleMap -> {
-                    googleMap.clear();
-                    LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                if(selectedDate != null) {
+                    mapViewHistory.getMapAsync(googleMap -> {
+                        googleMap.clear();
+                        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 
-                    DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                    ArrayList<EventModel> events = db.getAllEventsByDate(selectedDate);
-                    if(events.size() > 0) {
-                        for (EventModel event : events) {
-                            LatLng pos = new LatLng(event.position.lat, event.position.lon);
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(pos);
-                            boundsBuilder.include(pos);
-                            googleMap.addMarker(markerOptions);
+                        DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+                        ArrayList<EventModel> events = db.getAllEventsByDate(selectedDate);
+                        if (events.size() > 0) {
+                            for (EventModel event : events) {
+                                LatLng pos = new LatLng(event.position.lat, event.position.lon);
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                markerOptions.position(pos);
+                                boundsBuilder.include(pos);
+                                googleMap.addMarker(markerOptions);
+                            }
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 20));
                         }
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 20));
-                    }
-                });
+                    });
+                }
             }
         });
 

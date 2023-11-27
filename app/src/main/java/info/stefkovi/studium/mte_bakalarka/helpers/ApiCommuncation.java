@@ -35,7 +35,7 @@ public class ApiCommuncation {
     private RequestQueue queue;
     private Context ctx;
     private final String BASE_URL = "https://bakalarka.beaverlyhills.eu/";
-    private final int CONNECTION_TIMEOUT = 15000;
+    private final int CONNECTION_TIMEOUT = 10000;
 
     public ApiCommuncation(Context ctx) {
         this.ctx = ctx;
@@ -55,7 +55,7 @@ public class ApiCommuncation {
 
         @Override
         public RetryPolicy getRetryPolicy() {
-            return new DefaultRetryPolicy(CONNECTION_TIMEOUT, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            return new DefaultRetryPolicy(CONNECTION_TIMEOUT, 3, 0);
         }
 
         @Override
