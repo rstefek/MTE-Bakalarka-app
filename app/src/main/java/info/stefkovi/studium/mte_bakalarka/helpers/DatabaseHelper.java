@@ -71,6 +71,13 @@ public class DatabaseHelper {
         }
     }
 
+    public long markEventsSentStatus(int statusOld, int statusNew) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, statusNew);
+        return db.update(DatabaseStructureHelper.EVENT_TABLE_NAME, values, DatabaseStructureHelper.EVENT_COLUMN_SENT + " = ?", new String[]{
+                String.valueOf(statusOld)
+        });
+    }
     public long markEventSentStatus(UUID eventUid, int status) {
         ContentValues values = new ContentValues();
         values.put(DatabaseStructureHelper.EVENT_COLUMN_SENT, status);

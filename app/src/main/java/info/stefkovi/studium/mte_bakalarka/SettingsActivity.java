@@ -28,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnDelete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.deleteErrorneous();
+                db.markEventsSentStatus(2,0);
                 Toast.makeText(getApplicationContext(), getString(R.string.SettingsDatabaseConfirm), Toast.LENGTH_SHORT).show();
             }
         });
