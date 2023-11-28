@@ -26,7 +26,9 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + EVENT_TABLE_NAME + " (" +
                 EVENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                EVENT_COLUMN_UUID + " TEXT," +
                 EVENT_COLUMN_TIMESTAMP + " TEXT, " +
+                EVENT_COLUMN_EVENT_GROUP_ID + " INT UNSIGNED," +
                 EVENT_COLUMN_SENT + " INT UNSIGNED, " +
                 EVENT_COLUMN_DATA_POSITION + " TEXT, " +
                 EVENT_COLUMN_DATA_CELLS + " TEXT" + ")");
