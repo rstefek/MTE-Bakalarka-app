@@ -27,7 +27,7 @@ public class TransferListActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventQueue eventQueue = new EventQueue(getApplicationContext());
+                EventQueue eventQueue = EventQueue.getInstance(getApplicationContext());
                 eventQueue.setUpdatedListener(new EventQueueUpdatedListener() {
                     @Override
                     public void onEventsQueueUpdated(EventQueueInfo queue) {

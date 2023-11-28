@@ -19,14 +19,29 @@ import info.stefkovi.studium.mte_bakalarka.model.EventQueueInfo;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 
 public class EventQueue {
+    private static EventQueue instance = null;
+
+    public static synchronized EventQueue getInstance(Context ctx)
+    {
+        if (instance == null)
+            instance = new EventQueue(ctx);
+
+        return instance;
+    }
+
+    private EventQueue(Context ctx) {
+        eventsToProcess = new HashMap<>();
+        this.ctx = ctx;
+    }
     private EventQueueUpdatedListener updatedListener;
     private final int QUEUE_LENGTH = 15;
     private HashMap<UUID, EventModel> eventsToProcess;
     private Context ctx;
     private long numInDb;
-    public EventQueue(Context ctx) {
-        eventsToProcess = new HashMap<>();
-        this.ctx = ctx;
+    private int deviceId;
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
     }
     public void onEventAdded() {
         DatabaseHelper db = DatabaseHelper.getInstance(ctx);
@@ -49,7 +64,7 @@ public class EventQueue {
 
         for ( UUID eventUid: eventsToProcess.keySet()) {
             EventModel event = eventsToProcess.get(eventUid);
-            api.sendEvent(new EventApiModel(event, api.getAPIUserId()), new Response.Listener<EventResultModel>() {
+            api.sendEvent(new EventApiModel(event, api.getAPIUserId(), deviceId), new Response.Listener<EventResultModel>() {
                 @Override
                 public void onResponse(EventResultModel response) {
                     db.markEventSentStatus(response.uid, 1);

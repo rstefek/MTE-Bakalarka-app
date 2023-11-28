@@ -9,16 +9,18 @@ public class EventApiModel {
     public String happened;
     public String network_type;
     public int user;
+    public int device;
     public List<CellInfoApiModel> cells;
     public PositionApiModel position;
     public int event_group;
 
-    public EventApiModel(EventModel eventModel, int userId) {
+    public EventApiModel(EventModel eventModel, int userId, int deviceId) {
         this.uid = eventModel.uid.toString();
         this.happened = DateTimeFormatter.ISO_DATE_TIME.format(eventModel.happened);
         this.cells = eventModel.cells;
         this.position = eventModel.position;
         this.user = userId;
+        this.device = deviceId;
         this.event_group = eventModel.event_group;
         Optional<CellInfoApiModel> regCell = eventModel.cells.stream().filter(cellInfoApiModel -> cellInfoApiModel.registered == true).findFirst();
         if(regCell.isPresent()) {

@@ -40,13 +40,16 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import info.stefkovi.studium.mte_bakalarka.helpers.ApiCommuncation;
 import info.stefkovi.studium.mte_bakalarka.helpers.PermissionHelper;
+import info.stefkovi.studium.mte_bakalarka.helpers.SharedPreferencesHelper;
 import info.stefkovi.studium.mte_bakalarka.listeners.BackgroundServiceUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.listeners.EventQueueUpdatedListener;
 import info.stefkovi.studium.mte_bakalarka.model.CellInfoApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.DeviceApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventQueueInfo;
@@ -199,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, BackgroundWorkerService.class);
 
         ApiCommuncation api = new ApiCommuncation(getApplicationContext());
+        SharedPreferencesHelper preferences = new SharedPreferencesHelper(getApplicationContext());
 
         ArrayAdapter<String> eventGroupsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.view_spinner_item, new ArrayList<>());
         Spinner spEventGroup = (Spinner) findViewById(R.id.spEventGroup);
@@ -212,6 +216,38 @@ public class MainActivity extends AppCompatActivity {
                 eventGroupsAdapter.notifyDataSetChanged();
                 spEventGroup.invalidate();
                 spEventGroup.setSelection(0);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        api.getDevices(new Response.Listener<List<DeviceApiModel>>() {
+            @Override
+            public void onResponse(List<DeviceApiModel> response) {
+                UUID deviceUuid = preferences.readCreateDeviceUUID();
+                int deviceApiId = 0;
+                for (DeviceApiModel device:response) {
+                    if(device.saved_uid.compareTo(deviceUuid) == 0) {
+                        eventQueue.setDeviceId(device.id);
+                        break;
+                    }
+                }
+                if(deviceApiId == 0) { //nemáme zatím v seznamu, musíme poslat POSTem
+                    api.createDevice(new DeviceApiModel(deviceUuid), new Response.Listener<DeviceApiModel>() {
+                        @Override
+                        public void onResponse(DeviceApiModel response) {
+                            eventQueue.setDeviceId(response.id);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -266,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        eventQueue = new EventQueue(getApplicationContext());
+        eventQueue = EventQueue.getInstance(getApplicationContext());
 
         boolean accepted = PermissionHelper.AllPermissionsAccepted(this, permissionsWanted);
         if (!accepted) {

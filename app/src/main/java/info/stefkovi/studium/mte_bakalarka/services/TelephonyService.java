@@ -114,8 +114,4 @@ public class TelephonyService {
         return apiCells;
     }
 
-    public String GetBasicDeviceInfo() {
-        return "";
-    }
-
 }

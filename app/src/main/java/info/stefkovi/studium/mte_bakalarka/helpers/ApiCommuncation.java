@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.stefkovi.studium.mte_bakalarka.model.DeviceApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
@@ -117,6 +118,14 @@ public class ApiCommuncation {
 
     public void getEventGroups(Response.Listener<List<EventGroupApiModel>> responseListener, Response.ErrorListener errorListener) {
         requestGET("event-groups", responseListener, errorListener, TypeTokenHelper.getEventGroupsListType(), getAPIToken());
+    }
+
+    public void getDevices(Response.Listener<List<DeviceApiModel>> responseListener, Response.ErrorListener errorListener) {
+        requestGET("devices", responseListener, errorListener, TypeTokenHelper.getDevicesListType(), getAPIToken());
+    }
+
+    public void createDevice(DeviceApiModel device, Response.Listener<DeviceApiModel> responseListener, Response.ErrorListener errorListener) {
+        requestPOST("devices", device, responseListener, errorListener, DeviceApiModel.class, getAPIToken());
     }
 
 }

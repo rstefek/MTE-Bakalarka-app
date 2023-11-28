@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.UUID;
+
 import info.stefkovi.studium.mte_bakalarka.R;
 
 public class SharedPreferencesHelper {
@@ -12,6 +14,7 @@ public class SharedPreferencesHelper {
     private SharedPreferences sharedPrefs;
     public static final String PREF_JWT = "jwt";
     public static final String PREF_GATHER_INTERVAL = "gathering_interval_sec";
+    public static final String PREF_DEVICE_UUID = "device_uuid";
 
     public SharedPreferencesHelper(Context ctx) {
         sharedPrefs = ctx.getSharedPreferences(ctx.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -37,6 +40,16 @@ public class SharedPreferencesHelper {
     public <T> T readPrefJson(String key, Class<T> tClass) {
         Gson gson = new Gson();
         return gson.fromJson(sharedPrefs.getString(key, "{}"), tClass);
+    }
+
+    public UUID readCreateDeviceUUID() {
+        String uuid = readPrefString(PREF_DEVICE_UUID);
+        if(uuid.isEmpty()) {
+            UUID newUuid = UUID.randomUUID();
+            savePrefString(PREF_DEVICE_UUID, newUuid.toString());
+            return newUuid;
+        }
+        return UUID.fromString(uuid);
     }
 
 }
