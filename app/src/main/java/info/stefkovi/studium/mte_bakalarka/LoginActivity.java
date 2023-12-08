@@ -55,25 +55,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-                /*
-                Handler handler = new Handler(Looper.getMainLooper());
-                Executors.newSingleThreadExecutor().execute(() -> {
-
-                    LoginResultApiModel res = ApiCommuncationOld.Login(loginName.getText().toString(), loginPassword.getText().toString());
-
-                    if(res != null) {
-                        //RecyclerView
-
-                        //uložení tokenu
-                        preferences.savePrefString("jwt", res.jwt);
-
-                        handler.post(() -> {
-                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(i);
-                        });
-                    }
-                });
-                */
                 }
             });
         } else {
