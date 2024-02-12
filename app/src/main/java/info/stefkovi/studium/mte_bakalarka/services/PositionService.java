@@ -1,9 +1,11 @@
 package info.stefkovi.studium.mte_bakalarka.services;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,6 @@ public class PositionService implements LocationListener {
 
     private long minTime = 10000;
     private LocationManager manager;
-    private Location currentLocation;
     private PositionUpdatedListener positionUpdatedListener;
 
     public PositionService(LocationManager manager) {
@@ -23,8 +24,16 @@ public class PositionService implements LocationListener {
     }
 
     @SuppressLint("MissingPermission")
-    public void activateGathering() {
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, this);
+    public void activateGathering(Context ctx) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            LocationRequest.Builder builder = new LocationRequest.Builder(minTime);
+            builder.setMinUpdateDistanceMeters(0);
+            builder.setQuality(LocationRequest.QUALITY_HIGH_ACCURACY);
+            LocationRequest lr = builder.build();
+            manager.requestLocationUpdates("fused", lr, ctx.getMainExecutor(), this );
+        } else {
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, this);
+        }
     }
 
     public void deactivateGathering() {
@@ -55,7 +64,6 @@ public class PositionService implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        currentLocation = location;
         if(positionUpdatedListener != null) {
             positionUpdatedListener.onPositionUpdated(convertLocation(location));
         }

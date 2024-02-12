@@ -111,7 +111,7 @@ public class BackgroundWorkerService extends Service {
         createNotificationChannel();
         startForeground(startId, new Notification.Builder(getApplicationContext(), CHANNEL_ID).setContentTitle(getString(R.string.BgChannelName)).setContentText(getString(R.string.BgChannelDesc)).build());
         setupInternalServices();
-        posService.activateGathering();
+        posService.activateGathering(getApplicationContext());
         wakeLock.acquire();
         return START_STICKY;
     }
