@@ -3,21 +3,23 @@ package info.stefkovi.studium.mte_bakalarka;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,37 +34,54 @@ public class PositionListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
         setContentView(R.layout.activity_position_list);
 
         MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onCreate(savedInstanceState);
-        mapViewHistory.getMapAsync(googleMap -> {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        });
+        mapViewHistory.setTileSource(TileSourceFactory.MAPNIK);
+        mapViewHistory.setMultiTouchControls(true);
+
+        IMapController mapController = mapViewHistory.getController();
+        mapController.setZoom(9.5);
 
         Button bFilter = (Button) findViewById(R.id.bFilter);
         bFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(selectedDate != null) {
-                    mapViewHistory.getMapAsync(googleMap -> {
-                        googleMap.clear();
-                        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-
-                        DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
-                        ArrayList<EventModel> events = db.getAllEventsByDate(selectedDate);
-                        if (events.size() > 0) {
-                            for (EventModel event : events) {
-                                LatLng pos = new LatLng(event.position.lat, event.position.lon);
-                                MarkerOptions markerOptions = new MarkerOptions();
-                                markerOptions.position(pos);
-                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.location_pin));
-                                boundsBuilder.include(pos);
-                                googleMap.addMarker(markerOptions);
-                            }
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 20));
+                    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+                    ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
+                    DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+                    ArrayList<EventModel> events = db.getAllEventsByDate(selectedDate);
+                    if (events.size() > 0) {
+                        for (EventModel event : events) {
+                            GeoPoint point = new GeoPoint(event.position.lat,event.position.lon);
+                            points.add(point);
+                            OverlayItem item = new OverlayItem(null, null, point);
+                            item.setMarker(AppCompatResources.getDrawable( ctx, R.drawable.location_pin ));
+                            items.add(item);
                         }
-                    });
+                    }
+
+                    ItemizedIconOverlay<OverlayItem> mOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+                            new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                @Override
+                                public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                    //do something
+                                    return true;
+                                }
+                                @Override
+                                public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                    return false;
+                                }
+                            }, ctx);
+                    mapViewHistory.getOverlays().clear();
+                    mapViewHistory.getOverlays().add(mOverlay);
+                    mapViewHistory.zoomToBoundingBox(BoundingBox.fromGeoPoints(points),false);
+
                 }
             }
         });
@@ -81,41 +100,6 @@ public class PositionListActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        MapView mapViewHistory = (MapView) findViewById(R.id.mapViewHistory);
-        mapViewHistory.onLowMemory();
     }
 
     @Override

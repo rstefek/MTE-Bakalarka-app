@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,17 +24,19 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -87,17 +90,30 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onPositionUpdated(PositionApiModel position) {
                     MapView mapView = (MapView) findViewById(R.id.mapView);
-                    mapView.getMapAsync(googleMap -> {
-                        LatLng latlng = new LatLng(position.lat, position.lon);
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                        googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
-                        googleMap.clear();
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latlng);
-                        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.location_pin));
-                        googleMap.addMarker(markerOptions);
-                    });
+                    IMapController mapController = mapView.getController();
+                    GeoPoint startPoint = new GeoPoint(position.lat, position.lon);
+                    mapController.setCenter(startPoint);
+
+                    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+                    OverlayItem item = new OverlayItem("Aktuální poloha", null, startPoint);
+                    item.setMarker(AppCompatResources.getDrawable( getApplicationContext(), R.drawable.location_pin ));
+                    items.add(item);
+
+                    ItemizedIconOverlay<OverlayItem> mOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+                            new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                @Override
+                                public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                    //do something
+                                    return true;
+                                }
+                                @Override
+                                public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                    return false;
+                                }
+                            }, getApplicationContext());
+                    mapView.getOverlays().clear();
+                    mapView.getOverlays().add(mOverlay);
 
                     TextView tvPositionAngle = (TextView) findViewById(R.id.tvPositionAngle);
                     tvPositionAngle.setText((int) Math.floor(position.bearing) + getString(R.string.MapUnitBearing));
@@ -300,6 +316,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
         setContentView(R.layout.activity_main);
 
         eventQueue = EventQueue.getInstance(getApplicationContext());
@@ -312,10 +332,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(googleMap -> {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        });
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setMultiTouchControls(true);
+
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(20d);
 
         ImageButton btnSettings = (ImageButton) findViewById(R.id.ibSettings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
@@ -355,41 +376,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onLowMemory();
     }
 
     @Override
