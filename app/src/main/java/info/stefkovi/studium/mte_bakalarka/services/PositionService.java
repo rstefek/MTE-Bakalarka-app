@@ -28,6 +28,7 @@ public class PositionService implements LocationListener {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             LocationRequest.Builder builder = new LocationRequest.Builder(minTime);
             builder.setMinUpdateDistanceMeters(0);
+            builder.setMinUpdateIntervalMillis(minTime);
             builder.setQuality(LocationRequest.QUALITY_HIGH_ACCURACY);
             LocationRequest lr = builder.build();
             manager.requestLocationUpdates("fused", lr, ctx.getMainExecutor(), this );

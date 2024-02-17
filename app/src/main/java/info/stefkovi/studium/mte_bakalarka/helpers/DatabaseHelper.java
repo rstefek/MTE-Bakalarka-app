@@ -133,8 +133,8 @@ public class DatabaseHelper {
         return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 1", null);
     }
 
-    public int deleteErrorneous() {
-        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 2", null);
+    public int deleteNotProcessed() {
+        return deleteSpecificEvents(DatabaseStructureHelper.EVENT_COLUMN_SENT + " = 0", null);
     }
 
     private int deleteSpecificEvents(String where, String[] whereArgs) {

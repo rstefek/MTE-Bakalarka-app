@@ -43,11 +43,11 @@ public class EventQueue {
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
     }
-    public void onEventAdded() {
+    public void onEventAdded(boolean sendData) {
         DatabaseHelper db = DatabaseHelper.getInstance(ctx);
         numInDb = db.getUnsentEventsCount();
 
-        if(eventsToProcess.size() == 0 && numInDb >= QUEUE_LENGTH) {
+        if(sendData && eventsToProcess.size() == 0 && numInDb >= QUEUE_LENGTH) {
             eventsToProcess = (HashMap<UUID, EventModel>) db.getEventsToSend(QUEUE_LENGTH).stream().collect(Collectors.toMap(eventModel -> eventModel.uid, eventModel -> eventModel));
             sendEvents();
         }

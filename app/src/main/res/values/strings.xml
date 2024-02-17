@@ -16,13 +16,15 @@
     <string name="CellListTopSignalAsu">Signal ASU</string>
     <string name="CellListTopSignalDbm">Signal dBm</string>
     <string name="SwitchActivate">Aktivuj sběr</string>
+    <string name="SwitchOffline">Neposílat data</string>
     <string name="CellUpdateLabel">Poslední zaznamenaná událost:</string>
     <string name="SwitchActivateConfirm">Sběr aktivován!</string>
     <string name="SwitchDeactivateConfirm">Sběr ukončen</string>
     <string name="SettingsHeaderGather">Nastavení sběru dat</string>
     <string name="SettingsHeaderDatabase">Údržba databáze</string>
     <string name="SettingsButtonClearProcessed">Vymazat zpracované záznamy</string>
-    <string name="SettingsButtonClearNotSent">Resetovat chyby</string>
+    <string name="SettingsButtonClearNotSent">Vymazat neodeslaná data</string>
+    <string name="SettingsButtonResetErrors">Resetovat chyby</string>
     <string name="SettingsHeaderCopyright">Copyright a licence</string>
     <string name="SettingsCopyrightLicence">©2023 Roman Štefek (STE0516)</string>
     <string name="SettingsDatabaseConfirm">Údržba provedena!</string>

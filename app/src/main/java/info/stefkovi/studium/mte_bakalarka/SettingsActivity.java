@@ -28,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnDelete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.markEventsSentStatus(2,0);
+                db.deleteNotProcessed();
                 Toast.makeText(getApplicationContext(), getString(R.string.SettingsDatabaseConfirm), Toast.LENGTH_SHORT).show();
             }
         });
@@ -38,6 +38,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.deleteProcessed();
+                Toast.makeText(getApplicationContext(), getString(R.string.SettingsDatabaseConfirm), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button btnDelete3 = (Button) findViewById(R.id.bResetErrors);
+        btnDelete3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.markEventsSentStatus(2,0);
                 Toast.makeText(getApplicationContext(), getString(R.string.SettingsDatabaseConfirm), Toast.LENGTH_SHORT).show();
             }
         });

@@ -210,7 +210,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void updateEventQueue() {
-        eventQueue.onEventAdded();
+        Switch swOffline = findViewById(R.id.swOffline);
+        eventQueue.onEventAdded(!swOffline.isChecked());
     }
 
     private void enableActivityActions() {
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        eventQueue.onEventAdded(); //prvotní načtení
+        eventQueue.onEventAdded(false); //prvotní načtení
 
         Switch swActivate = (Switch) findViewById(R.id.swActivate);
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

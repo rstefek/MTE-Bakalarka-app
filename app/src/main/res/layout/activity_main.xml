@@ -62,7 +62,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cellInfo"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topWidget">
@@ -176,7 +176,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activateWidget"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginTop="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -210,7 +210,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transferWidget"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:background="@color/primary_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -220,12 +220,11 @@
             android:id="@+id/progressBar"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:max="100"
             android:progress="60"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonSend"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvQueue" />
@@ -235,9 +234,9 @@
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:text="@string/MainButtonTransfer"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -250,6 +249,15 @@
             app:layout_constraintEnd_toEndOf="@+id/progressBar"
             app:layout_constraintStart_toStartOf="@+id/progressBar"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/swOffline"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="@string/SwitchOffline"
+            app:layout_constraintStart_toStartOf="@+id/tvQueue"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar"
+            tools:checked="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
