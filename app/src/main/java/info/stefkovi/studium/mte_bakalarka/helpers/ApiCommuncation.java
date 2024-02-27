@@ -26,6 +26,7 @@ import java.util.Map;
 
 import info.stefkovi.studium.mte_bakalarka.model.DeviceApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventApiModel;
+import info.stefkovi.studium.mte_bakalarka.model.EventBulkResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventGroupApiModel;
 import info.stefkovi.studium.mte_bakalarka.model.EventResultModel;
 import info.stefkovi.studium.mte_bakalarka.model.LoginApiModel;
@@ -36,7 +37,7 @@ public class ApiCommuncation {
     private RequestQueue queue;
     private Context ctx;
     private final String BASE_URL = "https://bakalarka.beaverlyhills.eu/";
-    private final int CONNECTION_TIMEOUT = 10000;
+    private final int CONNECTION_TIMEOUT = 20000;
 
     public ApiCommuncation(Context ctx) {
         this.ctx = ctx;
@@ -114,6 +115,10 @@ public class ApiCommuncation {
 
     public void sendEvent(EventApiModel event, Response.Listener<EventResultModel> responseListener, Response.ErrorListener errorListener) {
         requestPOST("events", event, responseListener, errorListener, EventResultModel.class, getAPIToken());
+    }
+
+    public void sendEventsBulk(List<EventApiModel> events, Response.Listener<EventBulkResultModel> responseListener, Response.ErrorListener errorListener) {
+        requestPOST("events/bulk", events, responseListener, errorListener, EventBulkResultModel.class, getAPIToken());
     }
 
     public void getEventGroups(Response.Listener<List<EventGroupApiModel>> responseListener, Response.ErrorListener errorListener) {
