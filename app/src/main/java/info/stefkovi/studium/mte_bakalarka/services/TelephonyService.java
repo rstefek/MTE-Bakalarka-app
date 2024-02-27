@@ -1,15 +1,19 @@
 package info.stefkovi.studium.mte_bakalarka.services;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
+import android.telephony.CellIdentityNr;
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoNr;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthNr;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.TelephonyManager;
 
@@ -40,6 +44,36 @@ public class TelephonyService {
         for (CellInfo cell : allCells) {
             CellInfoApiModel apiCell = new CellInfoApiModel();
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if(cell instanceof CellInfoNr) {
+                    CellInfoNr cellNr = (CellInfoNr) cell;
+                    CellIdentityNr identityNr = (CellIdentityNr) cellNr.getCellIdentity();
+                    CellSignalStrengthNr signalNr = (CellSignalStrengthNr) cellNr.getCellSignalStrength();
+
+                    apiCell.registered = cellNr.isRegistered();
+                    apiCell.connection_status = cellNr.getCellConnectionStatus();
+                    apiCell.network_type = NTWRK_TYPE_5G;
+
+                    //Identita
+                    apiCell.identity.mnc = identityNr.getMncString();
+                    apiCell.identity.arfcn = identityNr.getNrarfcn();
+                    apiCell.identity.cid = identityNr.getNci();
+                    apiCell.identity.tac = identityNr.getTac();
+                    apiCell.identity.pci = identityNr.getPci();
+
+                    //Síla signálu
+                    apiCell.signal.signal_dbm = signalNr.getDbm();
+                    apiCell.signal.signal_asu = signalNr.getAsuLevel();
+                    apiCell.signal.rsrp_dbm = signalNr.getSsRsrp();
+                    apiCell.signal.rsrq_dbm = signalNr.getSsRsrp();
+                    apiCell.signal.rssnr_db = signalNr.getSsSinr();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        apiCell.signal.timing_advance = signalNr.getTimingAdvanceMicros();
+                    }
+                    apiCell.signal.level = signalNr.getLevel();
+                    continue;
+                }
+            }
             if(cell instanceof CellInfoGsm) {
                 CellInfoGsm cellGsm = (CellInfoGsm) cell;
                 CellIdentityGsm identityGsm = cellGsm.getCellIdentity();
