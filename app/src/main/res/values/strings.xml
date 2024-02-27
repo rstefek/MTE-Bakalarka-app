@@ -8,6 +8,7 @@
     <string name="ButtonDetailText">Detail</string>
     <string name="ButtonSendText">Odeslat data na API</string>
     <string name="MainButtonTransfer">API přenosy</string>
+    <string name="MainButtonManual">Ruční vstup</string>
     <string name="LoginButtonText">Login</string>
     <string name="preference_file_key">info.stefkovi.studium.mte_bakalarka.PREFERENCES</string>
     <string name="CellListTopCid">Cell ID</string>

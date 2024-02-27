@@ -13,6 +13,7 @@ public class EventApiModel {
     public List<CellInfoApiModel> cells;
     public PositionApiModel position;
     public int event_group;
+    public String user_description;
 
     public EventApiModel(EventModel eventModel, int userId, int deviceId) {
         this.uid = eventModel.uid.toString();
@@ -22,6 +23,7 @@ public class EventApiModel {
         this.user = userId;
         this.device = deviceId;
         this.event_group = eventModel.event_group;
+        this.user_description = eventModel.user_desc;
         Optional<CellInfoApiModel> regCell = eventModel.cells.stream().filter(cellInfoApiModel -> cellInfoApiModel.registered == true).findFirst();
         if(regCell.isPresent()) {
             this.network_type = regCell.get().network_type;

@@ -77,6 +77,19 @@ public class BackgroundWorkerService extends Service {
         }
     };
 
+    public void requestManualEvent(String name) {
+        List<CellInfoApiModel> cells = teleService.getAllCellInfo();
+        EventModel event = new EventModel(cells, name, eventGroupId);
+
+        DatabaseHelper db = DatabaseHelper.getInstance(getApplicationContext());
+        event.dbId = db.saveEventData(event);
+
+        if(serviceUpdatedListener != null) {
+            serviceUpdatedListener.onCellsUpdated(cells);
+            serviceUpdatedListener.onEvent(event);
+        }
+    }
+
     public void setUpdatedListener(BackgroundServiceUpdatedListener listener) {
         serviceUpdatedListener = listener;
     }

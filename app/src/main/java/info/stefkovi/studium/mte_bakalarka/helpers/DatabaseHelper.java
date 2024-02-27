@@ -43,6 +43,7 @@ public class DatabaseHelper {
         values.put(DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS, gson.toJson(event.cells));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP, DateTimeFormatter.ISO_DATE_TIME.format(event.happened));
         values.put(DatabaseStructureHelper.EVENT_COLUMN_EVENT_GROUP_ID, event.event_group);
+        values.put(DatabaseStructureHelper.EVENT_COLUMN_USER_DESC, event.user_desc);
         return db.insert(DatabaseStructureHelper.EVENT_TABLE_NAME, null, values);
     }
 
@@ -107,6 +108,7 @@ public class DatabaseHelper {
                 DatabaseStructureHelper.EVENT_COLUMN_SENT,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_CELLS,
                 DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION,
+                DatabaseStructureHelper.EVENT_COLUMN_USER_DESC,
                 DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP
         }, where, whereArgs, null, null, orderBy);
 
@@ -122,6 +124,7 @@ public class DatabaseHelper {
             event.position = gson.fromJson(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_DATA_POSITION)), PositionApiModel.class);
             event.happened = LocalDateTime.parse(c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_TIMESTAMP)), DateTimeFormatter.ISO_DATE_TIME);
             event.sent = c.getInt(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_SENT));
+            event.user_desc = c.getString(c.getColumnIndexOrThrow(DatabaseStructureHelper.EVENT_COLUMN_USER_DESC));
             events.add(event);
         }
         c.close();

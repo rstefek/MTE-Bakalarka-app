@@ -1,19 +1,23 @@
 package info.stefkovi.studium.mte_bakalarka;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -297,18 +301,23 @@ public class MainActivity extends AppCompatActivity {
         swActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Button btnManual = (Button) findViewById(R.id.buttonManual);
                 if(isChecked) {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchActivateConfirm), Toast.LENGTH_SHORT).show();
 
                     bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
                     startForegroundService(serviceIntent);
+
+                    btnManual.setEnabled(true);
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.SwitchDeactivateConfirm), Toast.LENGTH_SHORT).show();
 
                     unbindService(serviceConnection);
 
                     stopService(serviceIntent);
+
+                    btnManual.setEnabled(false);
                 }
             }
         });
@@ -375,6 +384,32 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), TransferListActivity.class);
                 startActivity(i);
+            }
+        });
+
+        Button btnManual = (Button) findViewById(R.id.buttonManual);
+        btnManual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                final EditText input = new EditText(MainActivity.this);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Ruční event")
+                        .setMessage("Vlož název vlastního eventu")
+                        .setView(input)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Editable value = input.getText();
+                                if(bwService != null) {
+                                    bwService.requestManualEvent(value.toString());
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Do nothing.
+                            }
+                        }).show();
             }
         });
     }

@@ -210,7 +210,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transferWidget"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:background="@color/primary_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -220,7 +220,7 @@
             android:id="@+id/progressBar"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="28dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:max="100"
@@ -239,6 +239,17 @@
             android:text="@string/MainButtonTransfer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonManual"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:enabled="false"
+            android:text="@string/MainButtonManual"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSend" />
 
         <TextView
             android:id="@+id/tvQueue"

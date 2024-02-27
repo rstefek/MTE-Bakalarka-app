@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseStructureHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public static final String DATABASE_NAME = "event_db";
     public static final String EVENT_TABLE_NAME = "events";
@@ -17,6 +17,7 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
     public static final String EVENT_COLUMN_SENT = "sent";
     public static final String EVENT_COLUMN_DATA_CELLS = "cells";
     public static final String EVENT_COLUMN_DATA_POSITION = "position";
+    public static final String EVENT_COLUMN_USER_DESC = "user_desc";
 
     public DatabaseStructureHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,6 +32,7 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
                 EVENT_COLUMN_EVENT_GROUP_ID + " INT UNSIGNED," +
                 EVENT_COLUMN_SENT + " INT UNSIGNED, " +
                 EVENT_COLUMN_DATA_POSITION + " TEXT, " +
+                EVENT_COLUMN_USER_DESC + " TEXT, " +
                 EVENT_COLUMN_DATA_CELLS + " TEXT" + ")");
     }
 
@@ -45,6 +47,10 @@ public class DatabaseStructureHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL("ALTER TABLE " + EVENT_TABLE_NAME + " ADD " +
                     EVENT_COLUMN_EVENT_GROUP_ID + " INT UNSIGNED");
 
+        }
+        if(i < 5 && i1 >= 5) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + EVENT_TABLE_NAME + " ADD " +
+                    EVENT_COLUMN_USER_DESC + " TEXT");
         }
     }
 }

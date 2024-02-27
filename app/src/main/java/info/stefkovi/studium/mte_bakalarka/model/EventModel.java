@@ -12,10 +12,20 @@ public class EventModel {
     public PositionApiModel position;
     public int sent;
     public int event_group;
+    public String user_desc;
 
     public EventModel(List<CellInfoApiModel> cells, PositionApiModel position, int eventGroupId) {
         this.cells = cells;
         this.position = position;
+        this.happened = LocalDateTime.now();
+        this.uid = UUID.randomUUID();
+        this.sent = 0;
+        this.event_group = eventGroupId;
+    }
+
+    public EventModel(List<CellInfoApiModel> cells, String desc, int eventGroupId) {
+        this.cells = cells;
+        this.user_desc = desc;
         this.happened = LocalDateTime.now();
         this.uid = UUID.randomUUID();
         this.sent = 0;
