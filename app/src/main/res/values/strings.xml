@@ -14,8 +14,8 @@
     <string name="CellListTopCid">Cell ID</string>
     <string name="CellListTopLac">LAC</string>
     <string name="CellListTopTac">TAC</string>
-    <string name="CellListTopSignalAsu">Signal ASU</string>
-    <string name="CellListTopSignalDbm">Signal dBm</string>
+    <string name="CellListTopSignalAsu">Sig. ASU</string>
+    <string name="CellListTopSignalDbm">Sig. dBm</string>
     <string name="SwitchActivate">Aktivuj sběr</string>
     <string name="SwitchOffline">Neposílat data</string>
     <string name="CellUpdateLabel">Poslední zaznamenaná událost:</string>

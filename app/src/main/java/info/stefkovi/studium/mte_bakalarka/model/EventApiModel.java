@@ -2,7 +2,6 @@ package info.stefkovi.studium.mte_bakalarka.model;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 public class EventApiModel {
     public String uid;
@@ -24,10 +23,6 @@ public class EventApiModel {
         this.device = deviceId;
         this.event_group = eventModel.event_group;
         this.user_description = eventModel.user_desc;
-        Optional<CellInfoApiModel> regCell = eventModel.cells.stream().filter(cellInfoApiModel -> cellInfoApiModel.registered == true).findFirst();
-        if(regCell.isPresent()) {
-            this.network_type = regCell.get().network_type;
-        }
     }
 }
 

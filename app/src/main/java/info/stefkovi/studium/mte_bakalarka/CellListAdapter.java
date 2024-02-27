@@ -27,6 +27,7 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
      * (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView cellGen;
         private final TextView cellId;
         private final TextView cellLac;
         private final TextView cellTac;
@@ -37,6 +38,7 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
             super(view);
             // Define click listener for the ViewHolder's View
 
+            cellGen = (TextView) view.findViewById(R.id.cellGen);
             cellId = (TextView) view.findViewById(R.id.cellId);
             cellLac = (TextView) view.findViewById(R.id.cellLac);
             cellTac = (TextView) view.findViewById(R.id.cellTac);
@@ -46,6 +48,9 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
 
         public TextView getTextViewCellId() {
             return cellId;
+        }
+        public TextView getTextViewCellGen() {
+            return cellGen;
         }
         public TextView getTextViewSignalAsu() {
             return signalAsu;
@@ -87,6 +92,7 @@ public class CellListAdapter extends RecyclerView.Adapter<CellListAdapter.ViewHo
 
         CellInfoApiModel cell = cells.get(position);
 
+        viewHolder.getTextViewCellGen().setText(cell.network_type);
         viewHolder.getTextViewCellId().setText(longToStringWithNA(cell.identity.cid));
         viewHolder.getTextViewCellLac().setText(intToStringWithNA(cell.identity.lac));
         viewHolder.getTextViewCellTac().setText(intToStringWithNA(cell.identity.tac));
