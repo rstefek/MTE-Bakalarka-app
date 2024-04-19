@@ -32,11 +32,13 @@ public class EventQueue {
 
     private EventQueue(Context ctx) {
         eventsToProcess = new ArrayList<>();
+        this.api = new ApiCommuncation(ctx);
         this.ctx = ctx;
     }
     private EventQueueUpdatedListener updatedListener;
     private final int QUEUE_LENGTH = 15;
     private List<EventModel> eventsToProcess;
+    private ApiCommuncation api;
     private Context ctx;
     private long numInDb;
     private int deviceId;
@@ -69,7 +71,6 @@ public class EventQueue {
         eventsToProcess.clear();
     }
     private void sendEvents() {
-        ApiCommuncation api = new ApiCommuncation(ctx);
         DatabaseHelper db = DatabaseHelper.getInstance(ctx);
 
         int userId = api.getAPIUserId();

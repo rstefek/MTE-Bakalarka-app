@@ -37,7 +37,7 @@ public class ApiCommuncation {
     private RequestQueue queue;
     private Context ctx;
     private final String BASE_URL = "https://bakalarka.beaverlyhills.eu/";
-    private final int CONNECTION_TIMEOUT = 20000;
+    private final int CONNECTION_TIMEOUT = 25000;
 
     public ApiCommuncation(Context ctx) {
         this.ctx = ctx;

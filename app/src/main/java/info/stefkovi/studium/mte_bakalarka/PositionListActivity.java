@@ -58,11 +58,13 @@ public class PositionListActivity extends AppCompatActivity {
                     ArrayList<EventModel> events = db.getAllEventsByDate(selectedDate);
                     if (events.size() > 0) {
                         for (EventModel event : events) {
-                            GeoPoint point = new GeoPoint(event.position.lat,event.position.lon);
-                            points.add(point);
-                            OverlayItem item = new OverlayItem(null, null, point);
-                            item.setMarker(AppCompatResources.getDrawable( ctx, R.drawable.location_pin ));
-                            items.add(item);
+                            if(event.position != null) {
+                                GeoPoint point = new GeoPoint(event.position.lat, event.position.lon);
+                                points.add(point);
+                                OverlayItem item = new OverlayItem(null, null, point);
+                                item.setMarker(AppCompatResources.getDrawable(ctx, R.drawable.location_pin));
+                                items.add(item);
+                            }
                         }
                     }
 
