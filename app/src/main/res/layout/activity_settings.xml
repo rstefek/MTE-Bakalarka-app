@@ -7,6 +7,14 @@
     tools:context=".SettingsActivity">
 
     <TextView
+        android:id="@+id/tlDeviceID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/bDeleteNonSent"
+        app:layout_constraintTop_toBottomOf="@+id/bDeleteNonSent" />
+
+    <TextView
         android:id="@+id/tlSettingGather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,17 +37,16 @@
         app:layout_constraintTop_toBottomOf="@id/etGatherNumsec" />
 
 
-
     <TextView
         android:id="@+id/tlSettingCopyright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/SettingsHeaderCopyright"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bDeleteNonSent" />
+        app:layout_constraintTop_toBottomOf="@id/tlDeviceID" />
 
     <Button
         android:id="@+id/bSaveGather"

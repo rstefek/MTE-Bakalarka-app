@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         EditText etGatherNumsec = (EditText) findViewById(R.id.etGatherNumsec);
         etGatherNumsec.setText(preferencesHelper.readPrefString(SharedPreferencesHelper.PREF_GATHER_INTERVAL));
+
+        TextView tlDeviceID = (TextView) findViewById(R.id.tlDeviceID);
+        tlDeviceID.setText(preferencesHelper.readPrefString(SharedPreferencesHelper.PREF_DEVICE_UUID));
 
         Button btnDelete1 = (Button) findViewById(R.id.bDeleteNonSent);
         btnDelete1.setOnClickListener(new View.OnClickListener() {

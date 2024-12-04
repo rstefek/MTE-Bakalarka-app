@@ -31,7 +31,7 @@ public class PositionService implements LocationListener {
             builder.setMinUpdateIntervalMillis(minTime);
             builder.setQuality(LocationRequest.QUALITY_HIGH_ACCURACY);
             LocationRequest lr = builder.build();
-            manager.requestLocationUpdates("fused", lr, ctx.getMainExecutor(), this );
+            manager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, lr, ctx.getMainExecutor(), this );
         } else {
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, this);
         }

@@ -158,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
 
+                        TextView tvLastCellGenValue = (TextView) findViewById(R.id.tvLastCellGen);
+                        tvLastCellGenValue.setText(String.valueOf(connectedCell.network_type));
+
                         TextView tvCellCIDValue = (TextView) findViewById(R.id.tvCellCIDValue);
                         tvCellCIDValue.setText(String.valueOf(connectedCell.identity.cid));
 

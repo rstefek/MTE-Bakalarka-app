@@ -47,6 +47,17 @@
             app:layout_constraintStart_toStartOf="@+id/tvCellUpdateLabel"
             app:layout_constraintTop_toBottomOf="@+id/tvCellUpdateLabel" />
 
+
+        <TextView
+            android:id="@+id/tvLastCellGen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivSignalStrength"
+            app:layout_constraintStart_toEndOf="@+id/ivSignalStrength"
+            app:layout_constraintTop_toTopOf="@+id/ivSignalStrength" />
+
         <ImageView
             android:id="@+id/ivSignalStrength"
             android:layout_width="48dp"
