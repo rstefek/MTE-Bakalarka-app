@@ -65,7 +65,7 @@ public class TelephonyService {
                     apiCell.signal.signal_dbm = signalNr.getDbm();
                     apiCell.signal.signal_asu = signalNr.getAsuLevel();
                     apiCell.signal.rsrp_dbm = signalNr.getSsRsrp();
-                    apiCell.signal.rsrq_dbm = signalNr.getSsRsrp();
+                    apiCell.signal.rsrq_dbm = signalNr.getSsRsrq();
                     apiCell.signal.rssnr_db = signalNr.getSsSinr();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                         apiCell.signal.timing_advance = signalNr.getTimingAdvanceMicros();
